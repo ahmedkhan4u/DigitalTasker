@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "712023147232",
+    "firebase_url": "https://digitaltasker-74ebf.firebaseio.com",
+    "project_id": "digitaltasker-74ebf",
+    "storage_bucket": "digitaltasker-74ebf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712023147232:android:16a11a6cf389c49774c685",
+        "android_client_info": {
+          "package_name": "com.softrasol.ahmedgulsaqib.digitaltasker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "712023147232-6ulhr0v7350kb266p3nqc5lhp52fq2hl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softrasol.ahmedgulsaqib.digitaltasker",
+            "certificate_hash": "b542c5ed2fb2049d656ae09927733ac61e1bda8c"
+          }
+        },
+        {
+          "client_id": "712023147232-ff9d3sf17p9r26u0egf1f1ra98sflneq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi6jLaL2FFMghQV5Xdh-iE6hIH2oPy1HI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "712023147232-ff9d3sf17p9r26u0egf1f1ra98sflneq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
