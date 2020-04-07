@@ -20,11 +20,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class PhoneAuthActivity extends AppCompatActivity {
+public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage {
     //...............................................................................................
 
     private FirebaseAuth mAuth;
@@ -32,6 +42,7 @@ public class PhoneAuthActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private String code, smsCode;
+    private String comPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,7 @@ public class PhoneAuthActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
     }
+
     public void ButtonPhoneAuthClick(View view) {
         phoneAuthBottomSheetDialog();
     }
@@ -103,21 +115,22 @@ public class PhoneAuthActivity extends AppCompatActivity {
         mTxtPhoneNumber = bottomSheetDialog.findViewById(R.id.txt_phone_number);
         String phoneNumber = mTxtPhoneNumber.getText().toString().trim();
 
-        if (phoneNumber.isEmpty()){
+        if (phoneNumber.isEmpty()) {
             mTxtPhoneNumber.setError("Required");
             mTxtPhoneNumber.requestFocus();
             return;
         }
-        if (phoneNumber.length()<10){
+        if (phoneNumber.length() < 10) {
             mTxtPhoneNumber.setError("Enter Complete Phone Number");
             mTxtPhoneNumber.requestFocus();
             return;
         }
 
 
+        comPhoneNumber = "92"+phoneNumber;
         progressDialogFun();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+92"+phoneNumber,        // Phone number to verify
+                comPhoneNumber,        // Phone number to verify
                 120,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
                 TaskExecutors.MAIN_THREAD,               // Activity (for callback binding)
@@ -161,7 +174,8 @@ public class PhoneAuthActivity extends AppCompatActivity {
             signInWithPhoneAuthCredential(credential);
         } catch (Exception e) {
             Toast.makeText(PhoneAuthActivity.this,
-                    e.getMessage(), Toast.LENGTH_SHORT).show();        }
+                    e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -174,7 +188,8 @@ public class PhoneAuthActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             progressDialog.cancel();
 
-                            //addingCustomerDataToFirebaseDatabase();
+                            createUserInFirebaseDatabase();
+
                             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -189,4 +204,61 @@ public class PhoneAuthActivity extends AppCompatActivity {
                 });
     }
 
+    private void createUserInFirebaseDatabase() {
+
+        CollectionReference mRef = FirebaseFirestore.getInstance()
+                .collection("users");
+
+        Query query = mRef.whereEqualTo("uid", FirebaseAuth.getInstance().getUid());
+
+
+        mRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.getResult().size() == 0){
+                    
+                }
+            }
+        });
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    if (task.getResult().size()>0){
+                        for (DocumentSnapshot documentSnapshot : task.getResult()){
+
+                        }
+                    }else {
+                        saveUserData();
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void saveUserData() {
+        Map map = new HashMap();
+        map.put("uid", FirebaseAuth.getInstance().getUid());
+        map.put("phone",comPhoneNumber);
+        CollectionReference firestore = FirebaseFirestore.getInstance()
+                .collection("users");
+        firestore.document(FirebaseAuth.getInstance().getUid())
+                .set(map).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    showToast("User Created Successfully");
+                } else {
+                    showToast(task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 }

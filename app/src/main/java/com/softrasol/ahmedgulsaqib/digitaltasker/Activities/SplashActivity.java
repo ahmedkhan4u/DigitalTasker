@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
                 }catch (Exception ex){
                     Log.d("dxdiag", ex.getMessage());
                 }finally {
-                    startActivity(new Intent(getApplicationContext(), PhoneAuthActivity.class));
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     finish();
                 }
             }

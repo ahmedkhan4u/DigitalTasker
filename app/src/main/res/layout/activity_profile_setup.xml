@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/image_profile"
-                android:id="@+id/profile_image"
+                android:id="@+id/img_person_profile_setup"
                 />
             <ImageView
                 android:layout_width="wrap_content"
@@ -88,8 +88,7 @@
                 android:padding="30dp"
                 android:background="@drawable/outline_cnic_layout"
                 android:src="@drawable/ic_cnic_card"
-                android:id="@+id/image_front"
-
+                android:id="@+id/img_cnic_front_profile_setup"
                 >
 
             </ImageView>
@@ -101,7 +100,7 @@
                 android:layout_height="100dp"
                 android:background="@drawable/outline_cnic_layout"
                 android:src="@drawable/ic_cnic_card"
-                android:id="@+id/image_back"
+                android:id="@+id/img_cnic_back_profile_setup"
                 >
 
             </ImageView>
@@ -141,6 +140,7 @@
                     android:inputType="textPersonName"
                     android:drawableStart="@drawable/ic_person"
                     android:drawablePadding="10dp"
+                    android:id="@+id/edt_name_profile_setup"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -167,6 +167,7 @@
                     android:inputType="textEmailAddress"
                     android:drawableStart="@drawable/ic_email"
                     android:drawablePadding="10dp"
+                    android:id="@+id/edt_email_profile_setup"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -202,6 +203,7 @@
                     android:inputType="number"
                     android:drawableStart="@drawable/ic_price"
                     android:drawablePadding="10dp"
+                    android:id="@+id/edt_price_profile_setup"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -230,6 +232,7 @@
                     android:inputType="text|textMultiLine"
                     android:drawableStart="@drawable/ic_description"
                     android:drawablePadding="10dp"
+                    android:id="@+id/edt_description_profile_setup"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -243,12 +246,14 @@
 
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map"
+                android:id="@+id/map_profile_setup"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginTop="8dp"
-                tools:context=".Activities.ProfileSetupActivity" />
+                tools:context=".Activities.ProfileSetupActivity"
+
+                />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -274,13 +279,14 @@
                     android:inputType="text"
                     android:drawableStart="@drawable/ic_edit_loacation"
                     android:drawablePadding="10dp"
+                    android:id="@+id/edt_address_profile_setup"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/sign_up"
+                android:id="@+id/btn_create_profile_setup"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/btn_round_corners"
                 android:text="Create Profile"

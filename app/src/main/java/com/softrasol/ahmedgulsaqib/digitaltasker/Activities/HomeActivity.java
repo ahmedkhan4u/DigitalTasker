@@ -1,23 +1,36 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.TabsAccessorAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.ChatsFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.HomeFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.MoreFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.NotificatinsFragment;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements ToastMessage {
 
     private int[] tabIcons = {
             R.drawable.ic_home,
@@ -39,6 +52,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        checkUserAuthenticationToken();
+
         toolbarInflation();
         widgetInflation();
         tabLayout();
@@ -49,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void tabLayout() {
         TabsAccessorAdapter tabsAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager());
-        tabsAccessorAdapter.setFragment(new HomeFragment(),"");
+        tabsAccessorAdapter.setFragment(new HomeFragment(), "");
         tabsAccessorAdapter.setFragment(new NotificatinsFragment(), "");
         tabsAccessorAdapter.setFragment(new ChatsFragment(), "");
         tabsAccessorAdapter.setFragment(new MoreFragment(), "");
@@ -68,7 +83,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
+                switch (position) {
                     case 0:
                         textView.setText("Home");
                         break;
@@ -116,4 +131,47 @@ public class HomeActivity extends AppCompatActivity {
         mBtnBack.setVisibility(View.GONE);
     }
 
+    private void checkUserAuthenticationToken() {
+
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            startActivity(new Intent(getApplicationContext(), PhoneAuthActivity.class));
+            finish();
+            return;
+        }
+
+        checkIfUserDataExistsOrNot();
+    }
+
+    private void checkIfUserDataExistsOrNot() {
+        CollectionReference mRef = FirebaseFirestore.getInstance()
+                .collection("users");
+        Query query = mRef.whereEqualTo("uid", FirebaseAuth.getInstance().getUid());
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            if (!snapshot.contains("name")) {
+                                startActivity(new Intent
+                                        (getApplicationContext(), ProfileSetupActivity.class));
+                                finish();
+                                return;
+                            }else {
+
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 }
