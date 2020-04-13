@@ -127,7 +127,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage
         }
 
 
-        comPhoneNumber = "92"+phoneNumber;
+        comPhoneNumber = "+92"+phoneNumber;
         progressDialogFun();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 comPhoneNumber,        // Phone number to verify
@@ -190,9 +190,6 @@ public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage
 
                             createUserInFirebaseDatabase();
 
-                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 Toast.makeText(PhoneAuthActivity.this,
@@ -226,9 +223,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     if (task.getResult().size()>0){
-                        for (DocumentSnapshot documentSnapshot : task.getResult()){
-
-                        }
+                        goToHomeActivity();
                     }else {
                         saveUserData();
                     }
@@ -236,6 +231,12 @@ public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage
             }
         });
 
+    }
+
+    private void goToHomeActivity() {
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void saveUserData() {
@@ -250,6 +251,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
                     showToast("User Created Successfully");
+                    goToHomeActivity();
                 } else {
                     showToast(task.getException().getMessage());
                 }

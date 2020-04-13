@@ -141,7 +141,8 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
             return;
         }
 
-        checkIfUserDataExistsOrNot();
+            checkIfUserDataExistsOrNot();
+
     }
 
     private void checkIfUserDataExistsOrNot() {

@@ -1,6 +1,7 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.HomeCategoryModel;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.ViewUsersActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
 import java.util.List;
@@ -43,8 +45,11 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         holder.mCategoryImage.setImageResource(model.getCategory_image());
         holder.mCategoryName.setText(model.getCategory_name());
 
+        itemViewClick();
+
     }
-//...................................................................................................
+
+    //...................................................................................................
     @Override
     public int getItemCount() {
         return list.size();
@@ -62,5 +67,9 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
             mCategoryName = itemView.findViewById(R.id.txt_home_category);
 
         }
+    }
+
+    private void itemViewClick() {
+        //Intent intent = new Intent()
     }
 }
