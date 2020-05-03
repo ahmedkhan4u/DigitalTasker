@@ -104,14 +104,11 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         googleMapFragment();
         toolbarInflation();
         widgetInflation();
-        fillCategoryList();
+        fillCategoryList();// Spinner
 
         personImageClick();
         cnicFrontImageClick();
         cnicBackImageClick();
-
-        showProgressDialog();
-
         //Button Click
         submitDetailsButtonClick();
 
@@ -139,11 +136,11 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
                 category = categoryList[i];
 
                 if (category.equalsIgnoreCase("Buyer")){
+                    showToast("Buyer");
                     mLayoutTxtPrice.setVisibility(View.GONE);
-                    price = "0";
+                    mPrice.setText("0");
                 }else {
                     mLayoutTxtPrice.setVisibility(View.VISIBLE);
-                    price = null;
                 }
 
             }
@@ -183,7 +180,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
         mMap.setMyLocationEnabled(true);
@@ -353,7 +350,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
         if (description.isEmpty()){
             mDescription.setError("Required");
-            mEmail.requestFocus();
+            mDescription.requestFocus();
             return;
         }
 
@@ -375,6 +372,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         }
 
         sendDataToFirebaseDb();
+        showProgressDialog();
 
     }
 
@@ -455,7 +453,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
                 "price", model.getPrice(),
                 "description", model.getDescription(),
                 "address", model.getAddress(),
-                "categoty", model.getCategory(),
+                "category", model.getCategory(),
                 "profile_img", model.getProfile_img(),
                 "cnic_front_img", model.getCnic_front_img(),
                 "cnic_back_img", model.getCnic_back_img(),
@@ -470,6 +468,8 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     showToast("Data Saved Successfully");
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
                     progressDialog.cancel();
                 }else {
                     showToast(task.getException().getMessage());
@@ -489,6 +489,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         progressDialog.setCancelable(false);
         progressDialog.setTitle("Please Wait...");
         progressDialog.setMessage("Uploading Data In Progress");
+        progressDialog.show();
 
     }
 }

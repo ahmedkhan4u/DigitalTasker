@@ -45,7 +45,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         holder.mCategoryImage.setImageResource(model.getCategory_image());
         holder.mCategoryName.setText(model.getCategory_name());
 
-        itemViewClick();
+        itemViewClick(holder, model);
 
     }
 
@@ -69,7 +69,19 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         }
     }
 
-    private void itemViewClick() {
-        //Intent intent = new Intent()
+
+    private void itemViewClick(ViewHolder holder, final HomeCategoryModel model) {
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ViewUsersActivity.class);
+                intent.putExtra("category", model.getCategory_name());
+                context.startActivity(intent);
+            }
+        });
+
     }
+
+
 }

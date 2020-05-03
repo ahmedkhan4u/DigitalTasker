@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_marginTop="2dp"
                     android:layout_height="wrap_content"
-                    android:text="29th Dec, 2019"
+                    android:text="1 Km away"
                     android:textSize="11sp"
                     android:id="@+id/notify_time"
                     />
