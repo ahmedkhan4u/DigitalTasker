@@ -1,23 +1,19 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -42,18 +38,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firestore.v1beta1.DocumentTransform;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
-import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.ProfileSetupModel;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +54,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
 
 public class ProfileSetupActivity extends FragmentActivity implements OnMapReadyCallback
 , ToastMessage {
@@ -103,7 +95,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
         googleMapFragment();
         toolbarInflation();
-        widgetInflation();
+        widgetInflation();// XML
         fillCategoryList();// Spinner
 
         personImageClick();
@@ -442,7 +434,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
         Date date = new Date();
         String mDate = date.toLocaleString();
-        ProfileSetupModel model = new ProfileSetupModel(name, email, price, description,
+        UserDataModel model = new UserDataModel(name, email, price, description,
                 address, category, profileImageDownloadUrl,
                 cnincForntImageDownloadUrl, cnicBackImageDownloadUrl, latitude+"",
                 longitude+"", "false", "false",mDate,"","");

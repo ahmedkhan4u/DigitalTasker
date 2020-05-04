@@ -6,22 +6,22 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 @IgnoreExtraProperties
-public class ProfileSetupModel {
+public class UserDataModel {
 
     private String name, email, price , description, address, category,
             profile_img, cnic_front_img, cnic_back_img, lat, lng, is_verified, is_restrict
             , date, uid, phone;
 
 
-    public ProfileSetupModel() {
+    public UserDataModel() {
 
     }
 
-    public ProfileSetupModel(String name, String email, String price, String description,
-                             String address, String category, String profile_img,
-                             String cnic_front_img, String cnic_back_img, String lat, String lng,
-                             String is_verified, String is_restrict, String date, String uid,
-                             String phone) {
+    public UserDataModel(String name, String email, String price, String description,
+                         String address, String category, String profile_img,
+                         String cnic_front_img, String cnic_back_img, String lat, String lng,
+                         String is_verified, String is_restrict, String date, String uid,
+                         String phone) {
         this.name = name;
         this.email = email;
         this.price = price;
