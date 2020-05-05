@@ -65,9 +65,9 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
     private Spinner mSpinner;
     private GoogleMap mMap;
     private StorageReference mStorage;
-    private CircleImageView mProfileImage;
-    private ImageView mCnicFrontImage, mCnicBackImage;
-    private TextInputEditText mName, mEmail, mPrice , mDescription, mAddress;
+    private CircleImageView mImgProfileImage;
+    private ImageView mImgCnicFront, mImgCnicBack;
+    private TextInputEditText mEdtName, mEdtEmail, mEdtPrice, mEdtDescription, mEdtAddress;
     private TextInputLayout mLayoutTxtPrice;
     private Button mBtnCreateProfile;
 
@@ -130,7 +130,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
                 if (category.equalsIgnoreCase("Buyer")){
                     showToast("Buyer");
                     mLayoutTxtPrice.setVisibility(View.GONE);
-                    mPrice.setText("0");
+                    mEdtPrice.setText("0");
                 }else {
                     mLayoutTxtPrice.setVisibility(View.VISIBLE);
                 }
@@ -147,14 +147,14 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
     private void widgetInflation(){
         mSpinner = findViewById(R.id.dropdown_menu_account_setup);
-        mProfileImage = findViewById(R.id.img_person_profile_setup);
-        mCnicFrontImage = findViewById(R.id.img_cnic_front_profile_setup);
-        mCnicBackImage = findViewById(R.id.img_cnic_back_profile_setup);
-        mName = findViewById(R.id.edt_name_profile_setup);
-        mEmail = findViewById(R.id.edt_email_profile_setup);
-        mPrice = findViewById(R.id.edt_price_profile_setup);
-        mDescription = findViewById(R.id.edt_description_profile_setup);
-        mAddress = findViewById(R.id.edt_address_profile_setup);
+        mImgProfileImage = findViewById(R.id.img_person_profile_setup);
+        mImgCnicFront = findViewById(R.id.img_cnic_front_profile_setup);
+        mImgCnicBack = findViewById(R.id.img_cnic_back_profile_setup);
+        mEdtName = findViewById(R.id.edt_name_profile_setup);
+        mEdtEmail = findViewById(R.id.edt_email_profile_setup);
+        mEdtPrice = findViewById(R.id.edt_price_profile_setup);
+        mEdtDescription = findViewById(R.id.edt_description_profile_setup);
+        mEdtAddress = findViewById(R.id.edt_address_profile_setup);
         mBtnCreateProfile = findViewById(R.id.btn_create_profile_setup);
         mLayoutProfileImage = findViewById(R.id.layout_profile_img_setup);
         mLayoutTxtPrice = findViewById(R.id.layout_price_profile_setup);
@@ -201,7 +201,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
                 try {
                     addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude,1);
                     address = addresses.get(0).getAddressLine(0);
-                    mAddress.setText(address);
+                    mEdtAddress.setText(address);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -225,7 +225,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
     }
 
     private void cnicFrontImageClick() {
-        mCnicFrontImage.setOnClickListener(new View.OnClickListener() {
+        mImgCnicFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imagenum = 1;
@@ -239,7 +239,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
     private void cnicBackImageClick() {
 
-        mCnicBackImage.setOnClickListener(new View.OnClickListener() {
+        mImgCnicBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imagenum = 2;
@@ -260,21 +260,21 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
                 switch (imagenum) {
                     case 0:
                         profileImageUri = result.getUri();
-                        mProfileImage.setImageURI(profileImageUri);
+                        mImgProfileImage.setImageURI(profileImageUri);
                         break;
 
                     case 1:
                         cnicFrontUri = result.getUri();
-                        mCnicFrontImage.setImageURI(cnicFrontUri);
-                        mCnicFrontImage.setPadding(0,0,0,0);
-                        mCnicFrontImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                        mImgCnicFront.setImageURI(cnicFrontUri);
+                        mImgCnicFront.setPadding(0,0,0,0);
+                        mImgCnicFront.setScaleType(ImageView.ScaleType.FIT_XY);
                         break;
 
                     case 2:
                         cnicBackUri = result.getUri();
-                        mCnicBackImage.setImageURI(cnicBackUri);
-                        mCnicBackImage.setPadding(0,0,0,0);
-                        mCnicBackImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                        mImgCnicBack.setImageURI(cnicBackUri);
+                        mImgCnicBack.setPadding(0,0,0,0);
+                        mImgCnicBack.setScaleType(ImageView.ScaleType.FIT_XY);
                         break;
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -288,11 +288,11 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
             @Override
             public void onClick(View view) {
 
-                name = mName.getText().toString().trim();
-                email = mEmail.getText().toString().trim();
-                description = mDescription.getText().toString().trim();
-                price = mPrice.getText().toString().trim();
-                address = mAddress.getText().toString().trim();
+                name = mEdtName.getText().toString().trim();
+                email = mEdtEmail.getText().toString().trim();
+                description = mEdtDescription.getText().toString().trim();
+                price = mEdtPrice.getText().toString().trim();
+                address = mEdtAddress.getText().toString().trim();
 
                 validatingAllTheFields();
 
@@ -323,38 +323,38 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         }
 
         if (name.isEmpty()){
-            mName.setError("Required");
-            mName.requestFocus();
+            mEdtName.setError("Required");
+            mEdtName.requestFocus();
             return;
         }
 
         if (email.isEmpty()){
-            mEmail.setError("Required");
-            mEmail.requestFocus();
+            mEdtEmail.setError("Required");
+            mEdtEmail.requestFocus();
             return;
         }
 
         if (! Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            mEmail.setError("Kindly Input Proper Email Address");
-            mEmail.requestFocus();
+            mEdtEmail.setError("Kindly Input Proper Email Address");
+            mEdtEmail.requestFocus();
             return;
         }
 
         if (description.isEmpty()){
-            mDescription.setError("Required");
-            mDescription.requestFocus();
+            mEdtDescription.setError("Required");
+            mEdtDescription.requestFocus();
             return;
         }
 
         if (price.isEmpty()){
-            mPrice.setError("Required");
-            mPrice.requestFocus();
+            mEdtPrice.setError("Required");
+            mEdtPrice.requestFocus();
             return;
         }
 
         if (address.isEmpty()){
-            mAddress.setError("Required");
-            mAddress.requestFocus();
+            mEdtAddress.setError("Required");
+            mEdtAddress.requestFocus();
             return;
         }
 

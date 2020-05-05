@@ -48,9 +48,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Behzadi chiker kot kohat"
+                    android:text="Price : 500"
                     android:textSize="13sp"
-                    android:id="@+id/txt_view_users_address"
+                    android:id="@+id/txt_view_users_price"
                     />
 
                 <TextView
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:text="Price"
                     android:textSize="11sp"
-                    android:id="@+id/txt_view_users_price"
+                    android:id="@+id/txt_view_users_distance"
                     />
 
 

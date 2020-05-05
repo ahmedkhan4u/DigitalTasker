@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -31,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.ViewUsersAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
@@ -44,16 +47,16 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
     private TextView textView;
     private ImageButton mBtnBack;
 
-    private List<UserDataModel> list;
+    private List<UserDataModel> usersList;
 
     private String mCategoryName;
 
-    private double mLatitude, mLongitude;
+    private RecyclerView mRecyclerViewUsers;
 
     private GoogleMap mMap;
 
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
 
 
@@ -77,7 +80,8 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
     private void getAllUsersFromFirestoreDb() {
 
-        list = new ArrayList<>();
+        usersList = new ArrayList<>();
+
 
         CollectionReference collectionReference = FirebaseFirestore.getInstance()
                 .collection("users");
@@ -90,8 +94,10 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
                     for (QueryDocumentSnapshot snapshot : task.getResult()){
                         UserDataModel model = snapshot.toObject(UserDataModel.class);
-                        list.add(model);
+                        usersList.add(model);
                     }
+
+                    recyclerViewUsers();
 
                     onMapReady(mMap);
                     showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
@@ -100,6 +106,16 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
                 }
             }
         });
+
+    }
+
+    private void recyclerViewUsers() {
+
+        mRecyclerViewUsers = findViewById(R.id.recycler_view_view_users);
+        mRecyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+        ViewUsersAdapter adapter = new ViewUsersAdapter(getApplicationContext(), usersList);
+        mRecyclerViewUsers.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -149,7 +165,7 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         mMap.animateCamera(location);
         mMap.setMyLocationEnabled(true);
 
-        for (UserDataModel model : list){
+        for (UserDataModel model : usersList){
             LatLng latLng = new LatLng(Double.parseDouble(model.getLat()),
                     Double.parseDouble(model.getLng()));
             MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(model.getAddress());
