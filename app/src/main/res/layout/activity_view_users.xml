@@ -20,11 +20,20 @@
         android:layout_height="270dp"
         tools:context=".Activities.GoogleMap.MapsActivity" />
 
-    <androidx.recyclerview.widget.RecyclerView
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recycler_view_view_users"
-        />
+        android:layout_height="match_parent"
+        android:id="@+id/view_users_swipe_refresh"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recycler_view_view_users"
+            />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 

@@ -1,16 +1,26 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -29,7 +39,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,7 +55,8 @@ import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewUsersActivity extends FragmentActivity implements ToastMessage, OnMapReadyCallback {
+public class ViewUsersActivity extends FragmentActivity implements ToastMessage, OnMapReadyCallback ,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private Toolbar toolbar;
     private TextView textView;
@@ -55,9 +70,13 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
     private GoogleMap mMap;
 
+    private boolean gps_enabled = false;
+    private boolean network_enabled = false;
+
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     //...............................................................................................
@@ -67,16 +86,22 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         setContentView(R.layout.activity_view_users);
 
         mCategoryName = getIntent().getStringExtra("category");
+        mSwipeRefreshLayout = findViewById(R.id.view_users_swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_users);
+        assert supportMapFragment != null;
+        supportMapFragment.getMapAsync(ViewUsersActivity.this);
+
         fetchLocation();
         toolbarInflation(mCategoryName);
         getAllUsersFromFirestoreDb();
+        checkLocationServiceEnableOrDisabled();
 
     }
 
     //...............................................................................................
-
 
     private void getAllUsersFromFirestoreDb() {
 
@@ -94,18 +119,22 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
                     for (QueryDocumentSnapshot snapshot : task.getResult()){
                         UserDataModel model = snapshot.toObject(UserDataModel.class);
-                        usersList.add(model);
+                        if (model.getIs_verified().equalsIgnoreCase("true")){
+                            usersList.add(model);
+                        }
                     }
 
-                    recyclerViewUsers();
-
                     onMapReady(mMap);
-                    showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
+                    //showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
+                    recyclerViewUsers();
                 }else {
                     showToast(task.getException().getMessage());
                 }
             }
         });
+
+
+
 
     }
 
@@ -153,8 +182,15 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
             }
         });
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+
+        if (gps_enabled == false){
+
+            return;
+        }
 
         mMap = googleMap;
 
@@ -173,6 +209,38 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         }
 
     }
+
+    private void checkLocationServiceEnableOrDisabled() {
+
+        LocationManager lm = (LocationManager)ViewUsersActivity.this.getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            // notify user
+            new AlertDialog.Builder(ViewUsersActivity.this)
+                    .setMessage("GPS Network Not Enabled")
+                    .setPositiveButton("Open Settings", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ViewUsersActivity.this.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    }).setNegativeButton("", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }).show();
+        }
+
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -190,4 +258,16 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fetchLocation();
+                getAllUsersFromFirestoreDb();
+                onMapReady(mMap);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
+    }
 }

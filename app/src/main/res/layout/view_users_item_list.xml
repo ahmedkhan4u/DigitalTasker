@@ -22,7 +22,7 @@
                 android:layout_height="60dp"
                 android:src="@drawable/image_profile"
                 android:id="@+id/img_view_user_profile"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="4dp"
                 />
 
             <LinearLayout
@@ -40,7 +40,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="John Doe"
-                    style="@style/TextAppearance.AppCompat.Title"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                    android:textColor="@color/textColor"
                     android:textSize="14sp"
                     android:id="@+id/txt_view_user_name"
                     />
@@ -49,6 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Price : 500"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_medium"
                     android:textSize="13sp"
                     android:id="@+id/txt_view_users_price"
                     />
@@ -57,7 +59,8 @@
                     android:layout_width="wrap_content"
                     android:layout_marginTop="2dp"
                     android:layout_height="wrap_content"
-                    android:text="Price"
+                    android:text="Distance : 5km away"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_regular"
                     android:textSize="11sp"
                     android:id="@+id/txt_view_users_distance"
                     />

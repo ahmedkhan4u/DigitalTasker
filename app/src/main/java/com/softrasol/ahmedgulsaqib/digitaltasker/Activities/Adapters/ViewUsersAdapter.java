@@ -43,7 +43,7 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
         Picasso.get().load(model.getProfile_img()).resize(80,80)
                 .placeholder(R.drawable.image_profile).into(holder.mImgProfile);
         holder.mTxtName.setText(model.getName());
-        holder.mTxtPrice.setText(model.getPrice());
+        holder.mTxtPrice.setText("Per Day Price : "+model.getPrice()+" Rs");
 
 
     }
