@@ -34,6 +34,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -142,7 +143,8 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
         mRecyclerViewUsers = findViewById(R.id.recycler_view_view_users);
         mRecyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
-        ViewUsersAdapter adapter = new ViewUsersAdapter(getApplicationContext(), usersList);
+        ViewUsersAdapter adapter = new ViewUsersAdapter(getApplicationContext(), usersList,
+                currentLocation.getLatitude(), currentLocation.getLongitude());
         mRecyclerViewUsers.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -201,12 +203,23 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         mMap.animateCamera(location);
         mMap.setMyLocationEnabled(true);
 
-        for (UserDataModel model : usersList){
+        for (final UserDataModel model : usersList){
             LatLng latLng = new LatLng(Double.parseDouble(model.getLat()),
                     Double.parseDouble(model.getLng()));
             MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(model.getAddress());
             mMap.addMarker(markerOptions);
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    Intent intent = new Intent(getApplicationContext(), ViewUserDetailsActivity.class);
+                    intent.putExtra("uid",model.getUid());
+                    startActivity(intent);
+                    return false;
+                }
+            });
+
         }
+
 
     }
 

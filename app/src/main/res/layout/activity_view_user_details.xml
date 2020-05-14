@@ -1,12 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activities.ViewUserDetailsActivity">
 
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/custom_toolbar"
+                android:id="@+id/toolbar_view_user_details"
+                />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@color/colorPrimary"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/image_profile"
+                android:id="@+id/rest_profile_image"
+                android:scaleType="fitXY"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_viewuser_detail_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="Category : Electrician"
+            android:textColor="@color/textColor"
+            android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+            android:text="Worker"
+            android:textColor="#2196F3"
+            android:visibility="gone"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Saqib Nawaz"
+            android:id="@+id/txt_viewuser_detail_name"
+            android:textColor="@color/textColor"
+            android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Verified"
+            android:id="@+id/txt_verification"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+            android:textColor="@android:color/holo_green_dark"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:drawableStart="@drawable/ic_email"
+                    android:drawablePadding="8dp"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+                    android:textColor="@color/textColor"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="johndoe@email.com"
+                    android:textSize="12sp"
+                    android:drawablePadding="8dp"
+                    android:layout_marginStart="100dp"
+                    android:textAlignment="textEnd"
+                    android:id="@+id/txt_viewuser_detail_email"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_regular"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/textColor"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Address"
+                    android:drawableStart="@drawable/ic_location"
+                    android:drawablePadding="8dp"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+                    android:textColor="@color/textColor"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="+971-489*****"
+                    android:textSize="12sp"
+                    android:layout_marginStart="100dp"
+                    android:drawablePadding="8dp"
+                    android:textAlignment="textEnd"
+                    android:id="@+id/txt_viewuser_detail_address"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_regular"
+                    android:textColor="@color/textColor"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:drawableStart="@drawable/ic_location"
+            android:drawablePadding="8dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/textColor"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+            android:layout_gravity="center"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            >
+
+            <fragment
+                android:id="@+id/map_viewuser_details"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ProjectMaps.RestauranProfileMap"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_primary_bg"
+                android:src="@drawable/ic_current_location"
+                android:padding="4dp"
+                android:layout_gravity="end"
+                android:layout_margin="16dp"
+                android:visibility="gone"
+                android:id="@+id/map_restaurantLocation"
+                />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/lightGreyColor"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            />
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_round_corners"
+            android:text="Contact Seller"
+            android:textAllCaps="false"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:id="@+id/btn_profileVerifyRest"
+            android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+            android:textColor="@android:color/white"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_round_corners"
+            android:text="Add/View Menu"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="24dp"
+            />
+
+
+    </LinearLayout>
+
+</ScrollView>

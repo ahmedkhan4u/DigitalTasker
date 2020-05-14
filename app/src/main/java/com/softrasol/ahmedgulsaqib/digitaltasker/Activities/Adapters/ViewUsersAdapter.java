@@ -1,6 +1,8 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.ViewUserDetailsActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -21,10 +26,16 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
 
     private Context context;
     private List<UserDataModel> list;
+    private double currentLat, currentLng;
 
-    public ViewUsersAdapter(Context context, List<UserDataModel> list) {
+    public ViewUsersAdapter(Context context, List<UserDataModel> list, double currentLat,
+                            double currentLng) {
+
         this.context = context;
         this.list = list;
+        this.currentLat = currentLat;
+        this.currentLng = currentLng;
+
     }
 
     @NonNull
@@ -36,15 +47,33 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        UserDataModel model = list.get(position);
+        final UserDataModel model = list.get(position);
 
         Picasso.get().load(model.getProfile_img()).resize(80,80)
                 .placeholder(R.drawable.image_profile).into(holder.mImgProfile);
         holder.mTxtName.setText(model.getName());
         holder.mTxtPrice.setText("Per Day Price : "+model.getPrice()+" Rs");
 
+
+        LatLng latLng1 = new LatLng(Double.parseDouble(model.getLat()),
+                Double.parseDouble(model.getLng()));
+
+        LatLng latLng2 = new LatLng(currentLat,currentLng);
+
+        final double distance = CalculationByDistance(latLng1, latLng2);
+        int distanceInKm = (int) distance;
+        holder.mTxtDistance.setText("Distance : "+(distanceInKm)+" Km away");
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ViewUserDetailsActivity.class);
+                intent.putExtra("uid", model.getUid());
+                context.startActivity(intent);
+            }
+        });
 
     }
 
@@ -66,5 +95,30 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
             mTxtPrice = itemView.findViewById(R.id.txt_view_users_price);
             mTxtDistance = itemView.findViewById(R.id.txt_view_users_distance);
         }
+    }
+
+    public double CalculationByDistance(LatLng StartP, LatLng EndP) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                + " Meter   " + meterInDec);
+
+        return Radius * c;
     }
 }
