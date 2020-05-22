@@ -42,6 +42,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.NotificationsModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -460,6 +461,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     showToast("Data Saved Successfully");
+                    sendNotificationToAdmin();
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     finish();
                     progressDialog.cancel();
@@ -482,6 +484,36 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         progressDialog.setTitle("Please Wait...");
         progressDialog.setMessage("Uploading Data In Progress");
         progressDialog.show();
+
+    }
+
+    private void sendNotificationToAdmin() {
+
+        CollectionReference notificationReference = FirebaseFirestore.getInstance()
+                .collection("notifications");
+
+        String uid = notificationReference.document().getId();
+        DocumentReference documentReference = notificationReference.document(uid);
+
+        Date date = new Date();
+        String mDate = date.toLocaleString();
+
+        NotificationsModel model = new NotificationsModel("New user added"
+                ,"Verification approval pending",mDate,FirebaseAuth.getInstance().getUid()
+                ,"admin","false","new user",uid);
+
+
+        documentReference.set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        showToast("Your request is pending for the admin approval");
+                    }else {
+                        showToast(task.getException().getMessage());
+                    }
+            }
+        });
+
 
     }
 }

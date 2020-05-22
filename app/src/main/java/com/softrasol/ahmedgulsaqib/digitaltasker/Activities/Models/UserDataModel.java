@@ -1,7 +1,6 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
-import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 

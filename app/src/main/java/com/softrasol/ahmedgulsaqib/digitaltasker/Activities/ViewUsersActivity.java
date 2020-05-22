@@ -1,7 +1,6 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -56,6 +55,8 @@ import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class ViewUsersActivity extends FragmentActivity implements ToastMessage, OnMapReadyCallback ,
         SwipeRefreshLayout.OnRefreshListener {
 
@@ -74,7 +75,9 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
     private boolean gps_enabled = false;
     private boolean network_enabled = false;
 
-    private Location currentLocation;
+    double latitude = 0, longitude = 0;
+
+    Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -91,13 +94,13 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_users);
-        assert supportMapFragment != null;
         supportMapFragment.getMapAsync(ViewUsersActivity.this);
 
         fetchLocation();
         toolbarInflation(mCategoryName);
-        getAllUsersFromFirestoreDb();
         checkLocationServiceEnableOrDisabled();
 
     }
@@ -108,44 +111,50 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
         usersList = new ArrayList<>();
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").whereEqualTo("category", mCategoryName)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
 
-        CollectionReference collectionReference = FirebaseFirestore.getInstance()
-                .collection("users");
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-        Query query = collectionReference.whereEqualTo("category", mCategoryName);
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-
-                    for (QueryDocumentSnapshot snapshot : task.getResult()){
-                        UserDataModel model = snapshot.toObject(UserDataModel.class);
-                        if (model.getIs_verified().equalsIgnoreCase("true")){
-                            usersList.add(model);
+                        if (!usersList.isEmpty()){
+                            usersList.clear();
                         }
+
+                        if (e != null){
+                            showToast(e.getMessage());
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots){
+                            UserDataModel model = snapshot.toObject(UserDataModel.class);
+                            if (model.getIs_verified().equalsIgnoreCase("true")){
+                                usersList.add(model);
+                            }
+                        }
+
+                        if (usersList.isEmpty()){
+                            return;
+                        }else {
+                            addMarkersOnGoogleMap();
+                        }
+                        //showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
+                        recyclerViewUsers();
+
                     }
-
-                    onMapReady(mMap);
-                    //showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
-                    recyclerViewUsers();
-                }else {
-                    showToast(task.getException().getMessage());
-                }
-            }
-        });
-
-
-
-
+                });
     }
 
     private void recyclerViewUsers() {
 
         mRecyclerViewUsers = findViewById(R.id.recycler_view_view_users);
         mRecyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+
         ViewUsersAdapter adapter = new ViewUsersAdapter(getApplicationContext(), usersList,
-                currentLocation.getLatitude(), currentLocation.getLongitude());
+                latitude, longitude);
         mRecyclerViewUsers.setAdapter(adapter);
+
         adapter.notifyDataSetChanged();
 
     }
@@ -172,17 +181,39 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
             return;
         }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+        task.addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    currentLocation = location;
-                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_users);
-                    assert supportMapFragment != null;
-                    supportMapFragment.getMapAsync(ViewUsersActivity.this);
+            public void onComplete(@NonNull Task<Location> task) {
+
+                if (task.isSuccessful()){
+
+                    try{
+                        latitude = task.getResult().getLatitude();
+                        longitude = task.getResult().getLongitude();
+                    }catch (Exception ex){
+                        Log.d("dxdiag", ex.getMessage());
+                    }
+
+
+                    showToast(latitude+"Longitude"+longitude);
+                    getAllUsersFromFirestoreDb();
+                }else {
+                    Log.d("dxdiag",task.getException().getMessage());
+                    getAllUsersFromFirestoreDb();
                 }
             }
         });
+//        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                if (location != null) {
+//                    currentLocation = location;
+//                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_users);
+//                    assert supportMapFragment != null;
+//                    supportMapFragment.getMapAsync(ViewUsersActivity.this);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -203,24 +234,31 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         mMap.animateCamera(location);
         mMap.setMyLocationEnabled(true);
 
+    }
+
+    private void addMarkersOnGoogleMap() {
+
+
         for (final UserDataModel model : usersList){
-            LatLng latLng = new LatLng(Double.parseDouble(model.getLat()),
-                    Double.parseDouble(model.getLng()));
-            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(model.getAddress());
-            mMap.addMarker(markerOptions);
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    Intent intent = new Intent(getApplicationContext(), ViewUserDetailsActivity.class);
-                    intent.putExtra("uid",model.getUid());
-                    startActivity(intent);
-                    return false;
+
+                try{
+                    LatLng latLng = new LatLng(Double.parseDouble(model.getLat()),
+                            Double.parseDouble(model.getLng()));
+                    MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(model.getAddress());
+                    mMap.addMarker(markerOptions);
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Intent intent = new Intent(getApplicationContext(), ViewUserDetailsActivity.class);
+                            intent.putExtra("uid",model.getUid());
+                            startActivity(intent);
+                            return false;
+                        }
+                    });
+                }catch (Exception ex){
+                    Log.d("dxdiag", ex.getMessage());
                 }
-            });
-
         }
-
-
     }
 
     private void checkLocationServiceEnableOrDisabled() {

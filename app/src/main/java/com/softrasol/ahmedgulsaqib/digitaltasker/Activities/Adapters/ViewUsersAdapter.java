@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,7 +65,9 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
 
         final double distance = CalculationByDistance(latLng1, latLng2);
         int distanceInKm = (int) distance;
+
         holder.mTxtDistance.setText("Distance : "+(distanceInKm)+" Km away");
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

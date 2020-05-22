@@ -22,14 +22,14 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.NotificationsModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -258,6 +258,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage
             }
         });
     }
+
 
     @Override
     public void showToast(String message) {

@@ -3,6 +3,7 @@ package com.softrasol.ahmedgulsaqib.digitaltasker.Activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.R
+import com.squareup.picasso.Picasso
 
 class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMessage {
 
@@ -22,6 +24,8 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
     lateinit var mTxtName : TextView
     lateinit var mTxtEmail : TextView
     lateinit var mTxtAddress : TextView
+    lateinit var mTxtDescriptin : TextView
+    lateinit var mImgProfile : ImageView
 
     lateinit var mMap : GoogleMap
 
@@ -56,6 +60,9 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
                 mTxtAddress.text = model?.address
                 mTxtCategory.text = model?.category
                 mTxtEmail.text = model?.email
+                mTxtDescriptin.text = model?.description
+                Picasso.get().load(model?.profile_img).resize(400,400)
+                    .placeholder(R.drawable.image_profile).into(mImgProfile)
 
                 showTheWorkerLocationOnMap(model?.lat, model?.lng, model?.address)
             }
@@ -78,6 +85,8 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
         mTxtName = findViewById(R.id.txt_viewuser_detail_name)
         mTxtEmail = findViewById(R.id.txt_viewuser_detail_email)
         mTxtAddress = findViewById(R.id.txt_viewuser_detail_address)
+        mTxtDescriptin = findViewById(R.id.txt_viewuser_detail_description)
+        mImgProfile = findViewById(R.id.img_viewuser_details_profile)
 
     }
 
