@@ -265,6 +265,7 @@
             android:id="@+id/btn_profileVerifyRest"
             android:fontFamily="@font/radomir_tinkov_gilroy_bold"
             android:textColor="@android:color/white"
+            android:onClick="ContactSellerClick"
             />
 
         <Button

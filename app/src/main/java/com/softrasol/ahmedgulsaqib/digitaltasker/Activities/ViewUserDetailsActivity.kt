@@ -1,7 +1,9 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel
@@ -123,6 +126,14 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
 
     override fun showToast(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_LONG)//To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun ContactSellerClick(view: View) {
+
+        val intent =  Intent(this@ViewUserDetailsActivity, ChatActivity::class.java);
+        intent.putExtra("reciever_uid", mUid)
+        startActivity(intent)
+
     }
 
 }
