@@ -1,29 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/nav_withFab"
     tools:context=".Activities.HomeActivity">
 
     <include layout="@layout/custom_toolbar"
-        android:id="@+id/toolbar"/>
-
-    <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tab_layout"
-        android:layout_alignParentBottom="true"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabIconTint="#ffffff"
-        app:tabBackground="@drawable/tabs_color_selector"
-        />
+            android:id="@+id/toolbar"/>
 
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/view_pager"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/tab_layout"
+        android:layout_height="match_parent"
+        android:id="@+id/viewPager"
+        android:layout_marginTop="56dp"
         />
-</RelativeLayout>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_bar1"
+        style="@style/Widget.MaterialComponents.BottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:fabAlignmentMode="center"
+        android:elevation="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        app:fabCradleRoundedCornerRadius="24dp"
+        app:fabCradleMargin="4dp"
+        />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
+        app:labelVisibilityMode="labeled"
+        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabPaddingStart="20dp"
+        android:elevation="8dp"
+        app:tabPaddingEnd="20dp"
+        />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add"
+        app:layout_anchor="@id/bottom_bar1"
+        app:backgroundTint="@color/colorPrimary"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginBottom="@dimen/cardview_default_elevation"
+        app:elevation="5dp"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".Activities.HomeActivity">-->
+
+<!--    <include layout="@layout/custom_toolbar"-->
+<!--        android:id="@+id/toolbar"/>-->
+
+<!--    <com.google.android.material.tabs.TabLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/tab_layout"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        app:tabIndicatorColor="@color/colorAccent"-->
+<!--        app:tabIconTint="#ffffff"-->
+<!--        app:tabBackground="@drawable/tabs_color_selector"-->
+<!--        />-->
+
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/view_pager"-->
+<!--        android:layout_below="@+id/toolbar"-->
+<!--        android:layout_above="@+id/tab_layout"-->
+<!--        />-->
+<!--</RelativeLayout>-->

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -13,6 +14,8 @@
         app:cardCornerRadius="8dp"
         android:layout_centerHorizontal="true"
         app:cardUseCompatPadding="true"
+        android:foreground="@drawable/custom_ripple"
+        android:focusable="true"
         >
 
         <RelativeLayout

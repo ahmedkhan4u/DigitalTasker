@@ -2,6 +2,9 @@ package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models;
 
 public class ChatModel {
 
+    public ChatModel() {
+    }
+
     private String sender_id, reciever_id, message, is_seen, uid, date_time;
 
     public ChatModel(String sender_id, String reciever_id, String message, String is_seen, String uid, String date_time) {

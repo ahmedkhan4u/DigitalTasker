@@ -23,6 +23,7 @@
             android:text="Lorem ipsum is simply?"
             style="@style/TextAppearance.AppCompat.Title"
             android:textSize="12sp"
+            android:id="@+id/show_msg"
             />
 
     </RelativeLayout>

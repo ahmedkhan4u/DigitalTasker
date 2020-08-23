@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -45,6 +48,8 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     private Toolbar toolbar;
     private TextView textView;
     private ImageButton mBtnBack;
+    private String unselectedColor = "#ffffff";
+    private String selectedColor = "#D6D6D6";
 
     //...............................................................................................
     @Override
@@ -53,12 +58,20 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         setContentView(R.layout.activity_home);
 
         checkUserAuthenticationToken();
-
         toolbarInflation();
         widgetInflation();
         tabLayout();
+        changeTabBarIconColors();
+
+        mViewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(View page, float position) {
+                page.setRotationY(position * -50);
+            }
+        });
 
     }
+
 
     //...............................................................................................
 
@@ -72,6 +85,27 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         mViewPager.setAdapter(tabsAccessorAdapter);
         setupTabIcons();
         changeToolBarTextOnViewPageChanged();
+    }
+
+    private void changeTabBarIconColors() {
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.getIcon().setColorFilter(Color.parseColor(selectedColor), PorterDuff.Mode.SRC_IN);
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.getIcon().setColorFilter(Color.parseColor(unselectedColor), PorterDuff.Mode.SRC_IN);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void changeToolBarTextOnViewPageChanged() {
@@ -110,8 +144,8 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     }
 
     private void widgetInflation() {
-        mTabLayout = findViewById(R.id.tab_layout);
-        mViewPager = findViewById(R.id.view_pager);
+        mTabLayout = findViewById(R.id.tabLayout);
+        mViewPager = findViewById(R.id.viewPager);
     }
 
     private void setupTabIcons() {
@@ -119,6 +153,12 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         mTabLayout.getTabAt(1).setIcon(tabIcons[1]);
         mTabLayout.getTabAt(2).setIcon(tabIcons[2]);
         mTabLayout.getTabAt(3).setIcon(tabIcons[3]);
+
+        mTabLayout.getTabAt(0).getIcon().setColorFilter(Color.parseColor(selectedColor), PorterDuff.Mode.SRC_IN);
+        mTabLayout.getTabAt(1).getIcon().setColorFilter(Color.parseColor(unselectedColor), PorterDuff.Mode.SRC_IN);
+        mTabLayout.getTabAt(2).getIcon().setColorFilter(Color.parseColor(unselectedColor), PorterDuff.Mode.SRC_IN);
+        mTabLayout.getTabAt(3).getIcon().setColorFilter(Color.parseColor(unselectedColor), PorterDuff.Mode.SRC_IN);
+
     }
 
     private void toolbarInflation() {
@@ -175,4 +215,5 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+
 }
