@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     private String unselectedColor = "#ffffff";
     private String selectedColor = "#D6D6D6";
 
-    //...............................................................................................
+    //................................................................................................
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
