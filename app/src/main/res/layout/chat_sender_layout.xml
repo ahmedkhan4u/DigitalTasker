@@ -45,11 +45,13 @@
             android:text="10:00 PM"
             android:layout_marginEnd="8dp"
             android:textSize="10sp"
+            android:id="@+id/time"
             />
 
     <ImageButton
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:id="@+id/is_seen"
         android:background="@drawable/ic_double_tick"/>
 
     </LinearLayout>

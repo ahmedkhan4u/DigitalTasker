@@ -73,6 +73,7 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ViewUserDetailsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("uid", model.getUid());
                 context.startActivity(intent);
             }

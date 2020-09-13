@@ -21,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 try {
 
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
 
                 }catch (Exception ex){
                     Log.d("dxdiag", ex.getMessage());

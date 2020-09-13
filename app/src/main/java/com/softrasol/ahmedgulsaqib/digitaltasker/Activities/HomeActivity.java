@@ -30,6 +30,7 @@ import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.ChatsFragm
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.HomeFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.MoreFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.NotificatinsFragment;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.UserStatus;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
@@ -216,4 +217,16 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UserStatus.saveUserStatus("online");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        UserStatus.saveUserStatus("offline");
+
+    }
 }

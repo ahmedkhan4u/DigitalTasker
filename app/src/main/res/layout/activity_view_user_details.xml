@@ -197,7 +197,44 @@
                         />
                 </RelativeLayout>
 
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price"
+                        android:drawablePadding="8dp"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+                        android:textColor="@color/textColor"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="00"
+                        android:textSize="12sp"
+                        android:layout_marginStart="100dp"
+                        android:drawablePadding="8dp"
+                        android:textAlignment="textEnd"
+                        android:id="@+id/txt_viewuser_detail_price"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_regular"
+                        android:textColor="@color/textColor"
+                        />
+                </RelativeLayout>
+
+
             </LinearLayout>
+
+
 
 
         </androidx.cardview.widget.CardView>

@@ -2,10 +2,13 @@ package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -41,6 +44,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Notification;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.NotificationsModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
@@ -57,7 +62,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileSetupActivity extends FragmentActivity implements OnMapReadyCallback
-, ToastMessage {
+        , ToastMessage {
 
     private Toolbar toolbar;
     private TextView textView;
@@ -78,14 +83,14 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
     private RelativeLayout mLayoutProfileImage;
 
-    private double latitude=0, longitude=0;
+    private double latitude = 0, longitude = 0;
 
-    private String name, email, price , description, address, category,
-    profileImageDownloadUrl, cnincForntImageDownloadUrl, cnicBackImageDownloadUrl;
+    private String name, email, price, description, address, category,
+            profileImageDownloadUrl, cnincForntImageDownloadUrl, cnicBackImageDownloadUrl;
     private ProgressDialog progressDialog;
 
-    private String [] categoryList = {"Choose Category", "Buyer", "Electrician", "Plumber", "Cleaner", "Delivery", "Handyman",
-    "Carpenter","Labour", "Ac Repair"};
+    private String[] categoryList = {"Choose Category", "Buyer", "Electrician", "Plumber", "Cleaner", "Delivery", "Handyman",
+            "Carpenter", "Labour", "Ac Repair"};
 
     //...............................................................................................
 
@@ -128,11 +133,11 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 category = categoryList[i];
 
-                if (category.equalsIgnoreCase("Buyer")){
+                if (category.equalsIgnoreCase("Buyer")) {
                     showToast("Buyer");
                     mLayoutTxtPrice.setVisibility(View.GONE);
                     mEdtPrice.setText("0");
-                }else {
+                } else {
                     mLayoutTxtPrice.setVisibility(View.VISIBLE);
                 }
 
@@ -146,7 +151,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
     }
 
-    private void widgetInflation(){
+    private void widgetInflation() {
         mSpinner = findViewById(R.id.dropdown_menu_account_setup);
         mImgProfileImage = findViewById(R.id.img_person_profile_setup);
         mImgCnicFront = findViewById(R.id.img_cnic_front_profile_setup);
@@ -176,6 +181,16 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         LatLng kohatLatLng = new LatLng(33.5612824,71.3974918);
@@ -438,7 +453,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         UserDataModel model = new UserDataModel(name, email, price, description,
                 address, category, profileImageDownloadUrl,
                 cnincForntImageDownloadUrl, cnicBackImageDownloadUrl, latitude+"",
-                longitude+"", "false", "false",mDate,"","");
+                longitude+"", "false", "false",mDate,"","","");
 
         documentReference.update(
                 "name", model.getName(),
@@ -489,31 +504,35 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
 
     private void sendNotificationToAdmin() {
 
-        CollectionReference notificationReference = FirebaseFirestore.getInstance()
-                .collection("notifications");
+        String uniqueKey = DatabaseHelper.mDatabase.collection("notifications").document().getId();
+                NotificationsModel model = new NotificationsModel("New user added"
+                ,"Verification approval pending",System.currentTimeMillis()+"",FirebaseAuth.getInstance().getUid()
+                ,"admin","false","new user",uniqueKey);
+        Notification.sendNotification(getApplicationContext(), model);
 
-        String uid = notificationReference.document().getId();
-        DocumentReference documentReference = notificationReference.document(uid);
-
-        Date date = new Date();
-        String mDate = date.toLocaleString();
-
-        NotificationsModel model = new NotificationsModel("New user added"
-                ,"Verification approval pending",mDate,FirebaseAuth.getInstance().getUid()
-                ,"admin","false","new user",uid);
-
-
-        documentReference.set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        showToast("Your request is pending for the admin approval");
-                    }else {
-                        showToast(task.getException().getMessage());
-                    }
-            }
-        });
-
-
+//        CollectionReference notificationReference = FirebaseFirestore.getInstance()
+//                .collection("notifications");
+//
+//        String uid = notificationReference.document().getId();
+//        DocumentReference documentReference = notificationReference.document(uid);
+//
+//        Date date = new Date();
+//        String mDate = date.toLocaleString();
+//
+//        NotificationsModel model = new NotificationsModel("New user added"
+//                ,"Verification approval pending",mDate,FirebaseAuth.getInstance().getUid()
+//                ,"admin","false","new user",uid);
+//
+//
+//        documentReference.set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                    if (task.isSuccessful()){
+//                        showToast("Your request is pending for the admin approval");
+//                    }else {
+//                        showToast(task.getException().getMessage());
+//                    }
+//            }
+//        });
     }
 }

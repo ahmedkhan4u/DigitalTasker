@@ -9,18 +9,14 @@ public class UserDataModel {
 
     private String name, email, price , description, address, category,
             profile_img, cnic_front_img, cnic_back_img, lat, lng, is_verified, is_restrict
-            , date, uid, phone;
+            , date, uid, phone, status;
 
 
     public UserDataModel() {
 
     }
 
-    public UserDataModel(String name, String email, String price, String description,
-                         String address, String category, String profile_img,
-                         String cnic_front_img, String cnic_back_img, String lat, String lng,
-                         String is_verified, String is_restrict, String date, String uid,
-                         String phone) {
+    public UserDataModel(String name, String email, String price, String description, String address, String category, String profile_img, String cnic_front_img, String cnic_back_img, String lat, String lng, String is_verified, String is_restrict, String date, String uid, String phone, String status) {
         this.name = name;
         this.email = email;
         this.price = price;
@@ -37,6 +33,7 @@ public class UserDataModel {
         this.date = date;
         this.uid = uid;
         this.phone = phone;
+        this.status = status;
     }
 
     public String getName() {
@@ -165,5 +162,13 @@ public class UserDataModel {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

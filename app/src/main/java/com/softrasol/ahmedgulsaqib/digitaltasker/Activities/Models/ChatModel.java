@@ -1,7 +1,8 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+@IgnoreExtraProperties
 public class ChatModel {
-
     public ChatModel() {
     }
 

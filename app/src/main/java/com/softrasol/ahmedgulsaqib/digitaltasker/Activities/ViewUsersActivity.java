@@ -48,6 +48,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.ViewUsersAdapter;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
@@ -57,7 +58,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class ViewUsersActivity extends FragmentActivity implements ToastMessage, OnMapReadyCallback ,
+public class ViewUsersActivity extends FragmentActivity implements ToastMessage, OnMapReadyCallback,
         SwipeRefreshLayout.OnRefreshListener {
 
     private Toolbar toolbar;
@@ -118,25 +119,25 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                        if (!usersList.isEmpty()){
+                        if (!usersList.isEmpty()) {
                             usersList.clear();
                         }
 
-                        if (e != null){
+                        if (e != null) {
                             showToast(e.getMessage());
                             return;
                         }
 
-                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots){
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                             UserDataModel model = snapshot.toObject(UserDataModel.class);
-                            if (model.getIs_verified().equalsIgnoreCase("true")){
+                            if (model.getIs_verified().equalsIgnoreCase("true") && !model.getUid().equals(DatabaseHelper.Uid)) {
                                 usersList.add(model);
                             }
                         }
 
-                        if (usersList.isEmpty()){
+                        if (usersList.isEmpty()) {
                             return;
-                        }else {
+                        } else {
                             addMarkersOnGoogleMap();
                         }
                         //showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
@@ -185,20 +186,20 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
             @Override
             public void onComplete(@NonNull Task<Location> task) {
 
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
 
-                    try{
+                    try {
                         latitude = task.getResult().getLatitude();
                         longitude = task.getResult().getLongitude();
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         Log.d("dxdiag", ex.getMessage());
                     }
 
 
-                    showToast(latitude+"Longitude"+longitude);
+                    showToast(latitude + "Longitude" + longitude);
                     getAllUsersFromFirestoreDb();
-                }else {
-                    Log.d("dxdiag",task.getException().getMessage());
+                } else {
+                    Log.d("dxdiag", task.getException().getMessage());
                     getAllUsersFromFirestoreDb();
                 }
             }
@@ -220,7 +221,7 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
     public void onMapReady(GoogleMap googleMap) {
 
 
-        if (gps_enabled == false){
+        if (gps_enabled == false) {
 
             return;
         }
@@ -228,10 +229,20 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
         mMap = googleMap;
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        LatLng kohatLatLng = new LatLng(33.5612824,71.3974918);
+        LatLng kohatLatLng = new LatLng(33.5612824, 71.3974918);
         CameraUpdate location = CameraUpdateFactory.newLatLngZoom(
                 kohatLatLng, 10);
         mMap.animateCamera(location);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mMap.setMyLocationEnabled(true);
 
     }

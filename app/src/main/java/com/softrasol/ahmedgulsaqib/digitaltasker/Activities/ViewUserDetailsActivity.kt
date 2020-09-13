@@ -1,6 +1,8 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,12 +32,15 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
     lateinit var mTxtAddress : TextView
     lateinit var mTxtDescriptin : TextView
     lateinit var mImgProfile : ImageView
+    lateinit var mTxtPrice : TextView
 
     lateinit var mMap : GoogleMap
 
     lateinit var userDetailsList : ArrayList<UserDataModel>
 
     lateinit var mUid : String
+    lateinit var mName : String
+    lateinit var mImgUrl : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +70,10 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
                 mTxtCategory.text = model?.category
                 mTxtEmail.text = model?.email
                 mTxtDescriptin.text = model?.description
+                mTxtPrice.text = model?.price
+
+                mImgUrl = model!!.profile_img
+
                 Picasso.get().load(model?.profile_img).resize(400,400)
                     .placeholder(R.drawable.image_profile).into(mImgProfile)
 
@@ -90,6 +100,7 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
         mTxtAddress = findViewById(R.id.txt_viewuser_detail_address)
         mTxtDescriptin = findViewById(R.id.txt_viewuser_detail_description)
         mImgProfile = findViewById(R.id.img_viewuser_details_profile)
+        mTxtPrice = findViewById(R.id.txt_viewuser_detail_price);
 
     }
 
@@ -113,6 +124,23 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
         val kohatLatLng = LatLng(33.5612824, 71.3974918)
         val location = CameraUpdateFactory.newLatLngZoom(kohatLatLng, 10f)
         mMap.animateCamera(location)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         mMap.isMyLocationEnabled = true
 
     }
@@ -130,8 +158,11 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
 
     fun ContactSellerClick(view: View) {
 
-        val intent =  Intent(this@ViewUserDetailsActivity, ChatActivity::class.java);
+        val intent =  Intent(this@ViewUserDetailsActivity, ChatsActivity::class.java);
         intent.putExtra("reciever_uid", mUid)
+        intent.putExtra("name",mTxtName.text)
+        intent.putExtra("image_url",mImgUrl)
+
         startActivity(intent)
 
     }

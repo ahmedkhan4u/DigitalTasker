@@ -1,5 +1,8 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class HomeCategoryModel {
 
     private String category_name;
