@@ -1,11 +1,13 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,6 +54,7 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     private ImageButton mBtnBack;
     private String unselectedColor = "#ffffff";
     private String selectedColor = "#D6D6D6";
+    private FloatingActionButton mFab;
 
     //................................................................................................
     @Override
@@ -63,6 +67,7 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         widgetInflation();
         tabLayout();
         changeTabBarIconColors();
+        floatingActionButtonClick();
 
         mViewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
@@ -71,6 +76,15 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
             }
         });
 
+    }
+
+    private void floatingActionButtonClick() {
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 
@@ -147,6 +161,7 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     private void widgetInflation() {
         mTabLayout = findViewById(R.id.tabLayout);
         mViewPager = findViewById(R.id.viewPager);
+        mFab = findViewById(R.id.fab);
     }
 
     private void setupTabIcons() {
@@ -228,5 +243,37 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         super.onStop();
         UserStatus.saveUserStatus("offline");
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitAppDialog();
+    }
+
+    private void exitAppDialog() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(HomeActivity.this);
+        builder1.setTitle("Alert!");
+        builder1.setMessage("Are you sure you want to exit.");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        HomeActivity.this.finish();
+                        dialog.cancel();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }

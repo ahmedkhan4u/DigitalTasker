@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,12 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
         holder.mTxtName.setText(model.getName());
         holder.mTxtPrice.setText("Per Day Price : "+model.getPrice()+" Rs");
 
+//        if (model.getStatus().equals("online")){
+//            holder.mImgStatus.setVisibility(View.VISIBLE);
+//        }else {
+//            holder.mImgStatus.setVisibility(View.GONE);
+//        }
+
 
         LatLng latLng1 = new LatLng(Double.parseDouble(model.getLat()),
                 Double.parseDouble(model.getLng()));
@@ -90,6 +97,7 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
 
         private CircleImageView mImgProfile;
         private TextView mTxtName, mTxtPrice, mTxtDistance;
+        private ImageView mImgStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +106,7 @@ public class ViewUsersAdapter extends RecyclerView.Adapter<ViewUsersAdapter.View
             mTxtName = itemView.findViewById(R.id.txt_view_user_name);
             mTxtPrice = itemView.findViewById(R.id.txt_view_users_price);
             mTxtDistance = itemView.findViewById(R.id.txt_view_users_distance);
+            mImgStatus =  itemView.findViewById(R.id.img_online_status);
         }
     }
 

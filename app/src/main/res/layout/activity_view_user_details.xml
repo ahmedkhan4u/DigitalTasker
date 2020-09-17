@@ -51,6 +51,41 @@
                 android:orientation="vertical"
                 >
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:layout_marginBottom="8dp"
+                    >
+
+                    <ImageButton
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/btn_back_ripple"
+                        android:src="@drawable/ic_report"
+                        android:layout_marginStart="16dp"
+                        android:padding="2dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginEnd="16dp"
+                        android:onClick="PostComplaintClick"
+                        />
+
+                    <ImageButton
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/btn_back_ripple"
+                        android:src="@drawable/ic_message"
+                        android:onClick="ContactSellerClick"
+                        android:scaleType="fitXY"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        />
+
+
+
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/txt_viewuser_detail_category"
@@ -287,8 +322,6 @@
 
         </androidx.cardview.widget.CardView>
 
-
-
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -299,23 +332,10 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
-            android:id="@+id/btn_profileVerifyRest"
             android:fontFamily="@font/radomir_tinkov_gilroy_bold"
             android:textColor="@android:color/white"
             android:onClick="ContactSellerClick"
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_round_corners"
-            android:text="Add/View Menu"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
             android:visibility="gone"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="24dp"
             />
 
 

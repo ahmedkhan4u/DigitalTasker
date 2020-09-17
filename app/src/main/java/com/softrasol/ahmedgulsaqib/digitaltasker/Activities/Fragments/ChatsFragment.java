@@ -1,14 +1,18 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments;
 
 
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.ChatListAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Helper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.ChatListModel;
@@ -43,6 +48,7 @@ public class ChatsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private List<ChatListModel> chatList = new ArrayList<>();
     private List<UserDataModel> userList = new ArrayList<>();
+    private Dialog dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +73,8 @@ public class ChatsFragment extends Fragment {
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                chatList.clear();
 
                 if ( e!= null){
                     Helper.logMessage(e.getMessage());
@@ -97,6 +105,8 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
+                userList.clear();
+
                 if (e != null){
                     Helper.logMessage(e.getMessage());
                     return;
@@ -111,9 +121,26 @@ public class ChatsFragment extends Fragment {
                                     Helper.logMessage(userModel.getName());
                                 }
                             }
+
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        ChatListAdapter adapter = new ChatListAdapter(getActivity(), userList);
+                        mRecyclerView.setAdapter(adapter);
+
                         }
+
                     }
                 }
         });
     }
+
+    public void showProgressBar(){
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.progress_bar);
+        ProgressBar progressBar = dialog.findViewById(R.id.progress_bar);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressBar.setProgress(100);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
 }

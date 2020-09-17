@@ -116,6 +116,7 @@ public class ChatsActivity extends AppCompatActivity {
     private void addUserToChatList() {
         final Map map = new HashMap();
         map.put("id", mReceiverUid);
+        map.put("time_stamp", System.currentTimeMillis()+"");
 
         final CollectionReference collectionReference = FirebaseFirestore.getInstance()
                 .collection("chat_list")

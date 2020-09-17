@@ -19,6 +19,14 @@
             android:layout_height="wrap_content"
             android:padding="6dp"
             >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_online_status"
+                android:elevation="8dp"
+                android:id="@+id/img_online_status"
+                android:visibility="gone"
+                />
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"

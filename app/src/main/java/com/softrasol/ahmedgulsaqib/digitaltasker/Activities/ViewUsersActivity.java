@@ -49,6 +49,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.ViewUsersAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.ProgressDialog;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
@@ -110,6 +111,8 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
     private void getAllUsersFromFirestoreDb() {
 
+        ProgressDialog.showProgressBar(ViewUsersActivity.this);
+
         usersList = new ArrayList<>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -125,6 +128,7 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
                         if (e != null) {
                             showToast(e.getMessage());
+                            ProgressDialog.cancelDialog();
                             return;
                         }
 
@@ -132,13 +136,16 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
                             UserDataModel model = snapshot.toObject(UserDataModel.class);
                             if (model.getIs_verified().equalsIgnoreCase("true") && !model.getUid().equals(DatabaseHelper.Uid)) {
                                 usersList.add(model);
+                                ProgressDialog.cancelDialog();
                             }
                         }
 
                         if (usersList.isEmpty()) {
+                            ProgressDialog.cancelDialog();
                             return;
                         } else {
                             addMarkersOnGoogleMap();
+                            ProgressDialog.cancelDialog();
                         }
                         //showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
                         recyclerViewUsers();

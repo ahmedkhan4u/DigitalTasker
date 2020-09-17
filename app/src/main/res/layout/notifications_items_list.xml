@@ -51,7 +51,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Price : 500"
+                    android:text="Message"
                     android:fontFamily="@font/radomir_tinkov_gilroy_medium"
                     android:textSize="13sp"
                     android:textColor="@color/textColor"

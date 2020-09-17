@@ -6,10 +6,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -17,9 +14,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.firestore.FirebaseFirestore
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Notification
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.NotificationsModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.R
 import com.squareup.picasso.Picasso
@@ -139,6 +140,7 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
             return
         }
         mMap.isMyLocationEnabled = true
@@ -164,6 +166,63 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
         intent.putExtra("image_url",mImgUrl)
 
         startActivity(intent)
+
+    }
+
+    fun PostComplaintClick(view: View) {
+
+        var bottomSheetDialog = BottomSheetDialog(this@ViewUserDetailsActivity)
+        bottomSheetDialog.setContentView(R.layout.complaints_bottomsheet_dialog);
+
+        var mTxtName : TextView
+        var mTxtMessage : TextView
+
+        var mBtnCancel : Button
+        var mBtnPost : Button
+
+        mTxtName = bottomSheetDialog.findViewById(R.id.complait_title)!!
+        mTxtMessage = bottomSheetDialog.findViewById(R.id.complaint_message)!!
+
+        mBtnCancel = bottomSheetDialog.findViewById(R.id.btn_cancel_complaint)!!
+        mBtnPost = bottomSheetDialog.findViewById(R.id.btn_post_complaint)!!
+
+        mBtnCancel.setOnClickListener(View.OnClickListener { v ->
+            bottomSheetDialog.cancel()
+        })
+
+        mBtnPost.setOnClickListener(View.OnClickListener { v ->
+
+            var title = mTxtName.text;
+            var message = mTxtMessage.text
+
+            if (title.isEmpty()){
+                mTxtName.setError("Required")
+                mTxtName.requestFocus()
+                return@OnClickListener
+            }
+
+            if (message.isEmpty()){
+                mTxtMessage.setError("Required")
+                mTxtMessage.requestFocus()
+                return@OnClickListener
+            }
+
+            var uniqueKey = DatabaseHelper.mDatabase.collection("complaints").document().id
+
+            var model = NotificationsModel(title.toString(), message.toString(),
+                System.currentTimeMillis().toString(), DatabaseHelper.Uid, mUid.toString(),
+                "false", "complaint", uniqueKey)
+
+            Notification.postComplaint(this@ViewUserDetailsActivity, model)
+
+            if (Notification.status == true){
+                bottomSheetDialog.cancel();
+            }
+
+        })
+
+        bottomSheetDialog.show()
+
 
     }
 

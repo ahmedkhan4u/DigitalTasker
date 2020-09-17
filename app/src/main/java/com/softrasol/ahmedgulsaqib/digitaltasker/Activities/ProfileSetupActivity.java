@@ -448,12 +448,10 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
         DocumentReference documentReference = collectionReference
                 .document(FirebaseAuth.getInstance().getUid());
 
-        Date date = new Date();
-        String mDate = date.toLocaleString();
         UserDataModel model = new UserDataModel(name, email, price, description,
                 address, category, profileImageDownloadUrl,
                 cnincForntImageDownloadUrl, cnicBackImageDownloadUrl, latitude+"",
-                longitude+"", "false", "false",mDate,"","","");
+                longitude+"", "false", "false",System.currentTimeMillis()+"","","","");
 
         documentReference.update(
                 "name", model.getName(),
