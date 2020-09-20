@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16sp"
+        >
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Looking for "
+            app:counterMaxLength="40"
+            app:counterEnabled="false"
+            android:layout_marginTop="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:tooltipText="Enter Your Complete Name"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textColor="@color/textColor"
+                android:maxLength="40"
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:inputType="textPersonName"
+                android:drawableStart="@drawable/ic_person"
+                android:drawablePadding="10dp"
+                android:id="@+id/txt_postrequest_title"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Work Description"
+            app:counterMaxLength="300"
+            app:counterEnabled="true"
+            android:layout_marginTop="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:tooltipText="Enter Your Complete Name"
+
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textColor="@color/textColor"
+                android:maxLength="40"
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:inputType="textPersonName"
+                android:drawableStart="@drawable/ic_description"
+                android:drawablePadding="10dp"
+                android:id="@+id/txt_postrequest_desc"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:padding="4dp"
+            android:layout_marginTop="16dp"
+            >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/btn_round_corners"
+                android:text="Cancel"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                android:id="@+id/btn_cacncel_request"
+                />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/btn_round_corners"
+                android:text="Post"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                android:id="@+id/btn_post_request"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>

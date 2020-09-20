@@ -66,8 +66,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         holder.mTxtTitle.setText(model.getTitle());
         holder.mTxtBody.setText(model.getBody());
-        long time_stamp = Long.parseLong(model.getTime_stamp());
-        holder.mTxtDateTime.setText(GetTimeAgo.getTimeAgo(time_stamp, context));
+//        long time_stamp = Long.parseLong(model.getTime_stamp());
+        //holder.mTxtDateTime.setText(GetTimeAgo.getTimeAgo(time_stamp, context));
 
 
     }

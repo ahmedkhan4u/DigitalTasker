@@ -7,20 +7,26 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,12 +35,17 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.TabsAccessorAdapter;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.BackgroundService.MyService;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.BackgroundService.Restarter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.ChatsFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.HomeFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.MoreFragment;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Fragments.NotificatinsFragment;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Helper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.UserStatus;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.WorkRequestModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
 public class HomeActivity extends AppCompatActivity implements ToastMessage {
@@ -56,6 +67,9 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     private String selectedColor = "#D6D6D6";
     private FloatingActionButton mFab;
 
+    private Intent mServiceIntent;
+    private MyService mMyService;
+
     //................................................................................................
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +82,7 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         tabLayout();
         changeTabBarIconColors();
         floatingActionButtonClick();
+        startService();
 
         mViewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
@@ -75,20 +90,95 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
                 page.setRotationY(position * -50);
             }
         });
+     //...............................................................................................
+    }
 
+    private void startService() {
+        mMyService = new MyService();
+        mServiceIntent = new Intent(this, mMyService.getClass());
+        if (!isMyServiceRunning(mMyService.getClass())) {
+            startService(mServiceIntent);
+        }
     }
 
     private void floatingActionButtonClick() {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                postWorkRequest();
             }
         });
     }
 
+    private void postWorkRequest() {
 
-    //...............................................................................................
+        final BottomSheetDialog dialog = new BottomSheetDialog(HomeActivity.this);
+        dialog.setContentView(R.layout.post_work_request);
+
+        final TextInputEditText mTxtTitle = dialog.findViewById(R.id.txt_postrequest_title);
+        final TextInputEditText mTxtDesc = dialog.findViewById(R.id.txt_postrequest_desc);
+
+        Button mBtnCancel = dialog.findViewById(R.id.btn_cacncel_request);
+        Button mBtnPost = dialog.findViewById(R.id.btn_post_request);
+
+
+        mBtnPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String title = mTxtTitle.getText().toString().trim();
+                String description = mTxtDesc.getText().toString().trim();
+
+                if (title.isEmpty()){
+                    mTxtTitle.setError("Required");
+                    mTxtTitle.requestFocus();
+                    return;
+                }
+
+                if (description.isEmpty()){
+                    mTxtDesc.setError("Required");
+                    mTxtDesc.requestFocus();
+                    return;
+                }
+
+                saveWorkRequestToFirestore(dialog, title, description);
+
+
+            }
+        });
+
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+
+    }
+
+    private void saveWorkRequestToFirestore(final BottomSheetDialog dialog, String title, String description) {
+
+        String uniqueKey = DatabaseHelper.mDatabase.collection("work_requests")
+                .document().getId();
+
+        WorkRequestModel model = new WorkRequestModel(title, description, DatabaseHelper.Uid,
+                System.currentTimeMillis()+"", uniqueKey);
+
+        DatabaseHelper.mDatabase.collection("work_requests").document(uniqueKey)
+                .set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Helper.shortToast(getApplicationContext(), "Request Posted");
+                    dialog.cancel();
+                }else {
+                    Helper.logMessage(task.getException().getMessage());
+                }
+            }
+        });
+    }
 
     private void tabLayout() {
         TabsAccessorAdapter tabsAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager());
@@ -275,5 +365,28 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.d("Service status", "Running");
+                return true;
+            }
+        }
+        Log.d ("Service status", "Not running");
+        return false;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        //stopService(mServiceIntent);
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this, Restarter.class);
+        this.sendBroadcast(broadcastIntent);
+        super.onDestroy();
     }
 }

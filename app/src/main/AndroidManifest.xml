@@ -48,6 +48,16 @@
         <activity android:name=".Activities.ProfileSetupActivity" />
         <activity android:name=".Activities.PhoneAuthActivity" />
         <activity android:name=".Activities.HomeActivity" />
+
+        <receiver
+            android:name=".Activities.BackgroundService.Restarter"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restartservice" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,6 +70,10 @@
             android:theme="@style/Base.Theme.AppCompat" />
 
         <service android:name=".Activities.Services.NotificationService" />
+        <service
+            android:name=".Activities.BackgroundService.MyService"
+            android:enabled="true" >
+        </service>
     </application>
 
 </manifest>
