@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="600dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Work Description"
-            app:counterMaxLength="300"
+            app:counterMaxLength="400"
             app:counterEnabled="true"
             android:layout_marginTop="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:textColor="@color/textColor"
-                android:maxLength="40"
+                android:maxLength="400"
                 android:scrollHorizontally="true"
                 android:ellipsize="end"
                 android:inputType="textPersonName"
@@ -68,35 +68,113 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Budget"
+            app:counterMaxLength="300"
+            app:counterEnabled="false"
+            android:layout_marginTop="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:tooltipText="Enter Your Complete Name"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textColor="@color/textColor"
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:inputType="phone"
+                android:drawableStart="@drawable/ic_price"
+                android:drawablePadding="10dp"
+                android:id="@+id/txt_postrequest_price"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:id="@+id/txt_postrequest_date"
+            android:textColor="@color/textColor"
+            android:padding="12dp"
+            android:background="@drawable/outline_grey"
+            android:drawableStart="@drawable/ic_date"
+            android:drawableTint="@android:color/black"
+            android:hint="Choose Date"
+            android:drawablePadding="8dp"
+            android:textColorHint="@color/textColor"
+            />
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Location"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            style="@style/TextAppearance.AppCompat.Title"
+            />
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="8dp"
+            tools:context=".Activities.HomeActivity"
+
+            />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            app:counterMaxLength="200"
+            app:counterEnabled="true"
+            android:layout_marginTop="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"                app:boxStrokeColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:tooltipText="Enter Edit Address"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textColor="@color/textColor"
+                android:maxLength="200"
+
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:inputType="text"
+                android:drawableStart="@drawable/ic_edit_loacation"
+                android:drawablePadding="10dp"
+                android:id="@+id/edt_address_post_work"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
+            android:orientation="vertical"
             android:padding="4dp"
             android:layout_marginTop="16dp"
             >
 
             <Button
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/btn_round_corners"
-                android:text="Cancel"
-                android:textColor="@android:color/white"
-                android:textAllCaps="false"
-                android:fontFamily="@font/radomir_tinkov_gilroy_bold"
-                android:id="@+id/btn_cacncel_request"
-                />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/btn_round_corners"
-                android:text="Post"
+                android:text="Post Work"
                 android:textColor="@android:color/white"
                 android:textAllCaps="false"
                 android:fontFamily="@font/radomir_tinkov_gilroy_bold"

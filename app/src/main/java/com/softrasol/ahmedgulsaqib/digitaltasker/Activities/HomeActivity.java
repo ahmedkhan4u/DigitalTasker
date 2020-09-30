@@ -8,6 +8,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,8 +19,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -48,6 +52,8 @@ import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMess
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.WorkRequestModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
+import java.util.Calendar;
+
 public class HomeActivity extends AppCompatActivity implements ToastMessage {
 
     private int[] tabIcons = {
@@ -70,6 +76,14 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     private Intent mServiceIntent;
     private MyService mMyService;
 
+    String date_time = "";
+    int mYear;
+    int mMonth;
+    int mDay;
+
+    int mHour;
+    int mMinute;
+
     //................................................................................................
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +96,9 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         tabLayout();
         changeTabBarIconColors();
         floatingActionButtonClick();
-        startService();
+
+
+        //startService();
 
         mViewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
@@ -96,89 +112,85 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
     private void startService() {
         mMyService = new MyService();
         mServiceIntent = new Intent(this, mMyService.getClass());
-        if (!isMyServiceRunning(mMyService.getClass())) {
-            startService(mServiceIntent);
-        }
+//        if (!isMyServiceRunning(mMyService.getClass())) {
+//            startService(mServiceIntent);
+//        }
     }
 
     private void floatingActionButtonClick() {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postWorkRequest();
+                //postWorkRequest();
+                startActivity(new Intent(getApplicationContext(), PostWorkRequestActivity.class));
+
             }
         });
     }
 
-    private void postWorkRequest() {
+//    private void postWorkRequest() {
+//
+//        final BottomSheetDialog dialog = new BottomSheetDialog(HomeActivity.this);
+//        dialog.setContentView(R.layout.post_work_request);
+//
+//        final TextInputEditText mTxtTitle = dialog.findViewById(R.id.txt_postrequest_title);
+//        final TextInputEditText mTxtDesc = dialog.findViewById(R.id.txt_postrequest_desc);
+//        final TextInputEditText mTxtPrice = dialog.findViewById(R.id.txt_postrequest_price);
+//        final TextView mTxtDate = dialog.findViewById(R.id.txt_postrequest_date);
+//
+//        mTxtDate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                datePicker(mTxtDate);
+//            }
+//        });
+//
+//        Button mBtnPost = dialog.findViewById(R.id.btn_post_request);
+//
+//
+//        mBtnPost.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                String title = mTxtTitle.getText().toString().trim();
+//                String description = mTxtDesc.getText().toString().trim();
+//                String price = mTxtPrice.getText().toString().trim();
+//
+//                if (title.isEmpty()){
+//                    mTxtTitle.setError("Required");
+//                    mTxtTitle.requestFocus();
+//                    return;
+//                }
+//
+//                if (description.isEmpty()){
+//                    mTxtDesc.setError("Required");
+//                    mTxtDesc.requestFocus();
+//                    return;
+//                }
+//
+//                if (price.isEmpty()){
+//                    mTxtPrice.setError("Required");
+//                    mTxtPrice.requestFocus();
+//                    return;
+//                }
+//
+//                //saveWorkRequestToFirestore(dialog, title, description, price);
+//
+//
+//            }
+//        });
+//
+//        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        dialog.show();
+//
+//    }
 
-        final BottomSheetDialog dialog = new BottomSheetDialog(HomeActivity.this);
-        dialog.setContentView(R.layout.post_work_request);
-
-        final TextInputEditText mTxtTitle = dialog.findViewById(R.id.txt_postrequest_title);
-        final TextInputEditText mTxtDesc = dialog.findViewById(R.id.txt_postrequest_desc);
-
-        Button mBtnCancel = dialog.findViewById(R.id.btn_cacncel_request);
-        Button mBtnPost = dialog.findViewById(R.id.btn_post_request);
-
-
-        mBtnPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String title = mTxtTitle.getText().toString().trim();
-                String description = mTxtDesc.getText().toString().trim();
-
-                if (title.isEmpty()){
-                    mTxtTitle.setError("Required");
-                    mTxtTitle.requestFocus();
-                    return;
-                }
-
-                if (description.isEmpty()){
-                    mTxtDesc.setError("Required");
-                    mTxtDesc.requestFocus();
-                    return;
-                }
-
-                saveWorkRequestToFirestore(dialog, title, description);
-
-
-            }
-        });
-
-        mBtnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-
-        dialog.show();
-
-    }
-
-    private void saveWorkRequestToFirestore(final BottomSheetDialog dialog, String title, String description) {
-
-        String uniqueKey = DatabaseHelper.mDatabase.collection("work_requests")
-                .document().getId();
-
-        WorkRequestModel model = new WorkRequestModel(title, description, DatabaseHelper.Uid,
-                System.currentTimeMillis()+"", uniqueKey);
-
-        DatabaseHelper.mDatabase.collection("work_requests").document(uniqueKey)
-                .set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Helper.shortToast(getApplicationContext(), "Request Posted");
-                    dialog.cancel();
-                }else {
-                    Helper.logMessage(task.getException().getMessage());
-                }
-            }
-        });
-    }
 
     private void tabLayout() {
         TabsAccessorAdapter tabsAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager());
@@ -367,26 +379,70 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         alert11.show();
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.d("Service status", "Running");
-                return true;
-            }
-        }
-        Log.d ("Service status", "Not running");
-        return false;
-    }
+//    private boolean isMyServiceRunning(Class<?> serviceClass) {
+//        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (serviceClass.getName().equals(service.service.getClassName())) {
+//                Log.d("Service status", "Running");
+//                return true;
+//            }
+//        }
+//        Log.d ("Service status", "Not running");
+//        return false;
+//    }
 
 
     @Override
     protected void onDestroy() {
         //stopService(mServiceIntent);
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction("restartservice");
-        broadcastIntent.setClass(this, Restarter.class);
-        this.sendBroadcast(broadcastIntent);
+//        Intent broadcastIntent = new Intent();
+//        broadcastIntent.setAction("restartservice");
+//        broadcastIntent.setClass(this, Restarter.class);
+//        this.sendBroadcast(broadcastIntent);
         super.onDestroy();
+    }
+
+    private void datePicker(final TextView mTxtDate){
+
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                        date_time = ""+dayOfMonth + "/" + Helper.getMonth(monthOfYear + 1) + "/" + year;
+                        //*************Call Time Picker Here ********************
+                        tiemPicker(mTxtDate);
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
+
+    private void tiemPicker(final TextView mTxtDate){
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        mHour = hourOfDay;
+                        mMinute = minute;
+
+                        mTxtDate.setText(date_time+" - "+hourOfDay + "H" + minute+"M ");
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
     }
 }
