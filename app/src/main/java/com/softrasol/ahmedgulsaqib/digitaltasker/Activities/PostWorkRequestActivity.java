@@ -1,13 +1,13 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -29,10 +29,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Helper;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.ProgressDialogClass;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.WorkRequestModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
@@ -64,6 +64,8 @@ public class PostWorkRequestActivity extends FragmentActivity implements OnMapRe
     String date_time = "";
     int mYear, mMonth, mDay, mHour, mMinute;
 
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,7 @@ public class PostWorkRequestActivity extends FragmentActivity implements OnMapRe
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        dialog = new ProgressDialog(this);
 
         widgetsInflation();
         toolbarInflation();
@@ -138,6 +141,9 @@ public class PostWorkRequestActivity extends FragmentActivity implements OnMapRe
                     return;
                 }
 
+                dialog.setTitle("Wait...");
+                dialog.show();
+                dialog.setCancelable(false);
                 saveWorkRequestToFirestore(title, description, price, latitude+"",
                         longitude+"", address);
 
@@ -174,8 +180,11 @@ public class PostWorkRequestActivity extends FragmentActivity implements OnMapRe
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     Helper.shortToast(getApplicationContext(), "Request Posted");
+                    finish();
+                    dialog.cancel();
                 }else {
                     Helper.logMessage(task.getException().getMessage());
+                    dialog.cancel();
                 }
             }
         });
@@ -288,7 +297,9 @@ public class PostWorkRequestActivity extends FragmentActivity implements OnMapRe
                         mHour = hourOfDay;
                         mMinute = minute;
 
-                        mTxtDate.setText(date_time+" - "+hourOfDay + "H: " + minute+"M ");
+                        date_time = date_time+" - "+hourOfDay + "H: " + minute+"M ";
+
+                        mTxtDate.setText(date_time);
                     }
                 }, mHour, mMinute, false);
         timePickerDialog.show();

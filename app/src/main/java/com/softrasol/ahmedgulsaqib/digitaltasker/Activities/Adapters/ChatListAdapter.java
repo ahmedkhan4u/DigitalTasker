@@ -65,7 +65,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChatsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("reciever_uid", model.getUid());
                 intent.putExtra("name", model.getName());
                 intent.putExtra("image_url", model.getProfile_img());

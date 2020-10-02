@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.PhoneAuthActivity;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.WorkRequestsActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
 /**
@@ -29,6 +30,7 @@ public class MoreFragment extends Fragment {
 
     private View mView;
     private TextView mLogout;
+    private TextView mTxtWorkRequests;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,11 +39,19 @@ public class MoreFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_more, container, false);
 
         widgetsInflation();
-
         logoutClick();
-
+        workRequestsClick();
 
         return mView;
+    }
+
+    private void workRequestsClick() {
+        mTxtWorkRequests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), WorkRequestsActivity.class));
+            }
+        });
     }
 
     private void logoutClick() {
@@ -64,6 +74,9 @@ public class MoreFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(getActivity(), PhoneAuthActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                         dialog.cancel();
                     }
                 });
@@ -82,6 +95,7 @@ public class MoreFragment extends Fragment {
 
     private void widgetsInflation() {
         mLogout = mView.findViewById(R.id.logout);
+        mTxtWorkRequests = mView.findViewById(R.id.txt_work_request);
     }
 
 }

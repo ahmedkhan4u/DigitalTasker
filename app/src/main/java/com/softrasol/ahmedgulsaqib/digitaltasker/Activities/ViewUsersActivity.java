@@ -36,20 +36,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.ViewUsersAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
-import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.ProgressDialog;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.ProgressDialogClass;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
@@ -111,7 +106,7 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
     private void getAllUsersFromFirestoreDb() {
 
-        ProgressDialog.showProgressBar(ViewUsersActivity.this);
+        ProgressDialogClass.showProgressBar(ViewUsersActivity.this);
 
         usersList = new ArrayList<>();
 
@@ -128,7 +123,7 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
 
                         if (e != null) {
                             showToast(e.getMessage());
-                            ProgressDialog.cancelDialog();
+                            ProgressDialogClass.cancelDialog();
                             return;
                         }
 
@@ -136,16 +131,16 @@ public class ViewUsersActivity extends FragmentActivity implements ToastMessage,
                             UserDataModel model = snapshot.toObject(UserDataModel.class);
                             if (model.getIs_verified().equalsIgnoreCase("true") && !model.getUid().equals(DatabaseHelper.Uid)) {
                                 usersList.add(model);
-                                ProgressDialog.cancelDialog();
+                                ProgressDialogClass.cancelDialog();
                             }
                         }
 
                         if (usersList.isEmpty()) {
-                            ProgressDialog.cancelDialog();
+                            ProgressDialogClass.cancelDialog();
                             return;
                         } else {
                             addMarkersOnGoogleMap();
-                            ProgressDialog.cancelDialog();
+                            ProgressDialogClass.cancelDialog();
                         }
                         //showToast(currentLocation.getLatitude()+ " "+currentLocation.getLongitude());
                         recyclerViewUsers();

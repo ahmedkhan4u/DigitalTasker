@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
-public class ProgressDialog {
+public class ProgressDialogClass {
 
     public static Dialog dialog;
 
