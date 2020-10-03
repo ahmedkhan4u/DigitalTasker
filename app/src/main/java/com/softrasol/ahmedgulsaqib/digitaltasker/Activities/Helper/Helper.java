@@ -4,10 +4,12 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Helper {
 
-
-
+    public static List<String> time_list = new ArrayList<>();
 
     public static void shortToast(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -64,6 +66,17 @@ public class Helper {
             default:
                 return "";
         }
+    }
+
+    public static List<String> getTimeList() {
+
+        for (int i=1; i<=24; i++){
+
+            time_list.add(i+"hours");
+
+        }
+
+        return time_list;
     }
 
 }

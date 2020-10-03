@@ -1,19 +1,22 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -25,15 +28,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.WorkRequestAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Helper;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.OrderModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.WorkRequestModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class WorkRequestDetailsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -44,6 +52,11 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
     private Button mBtnSendOffer;
     private WorkRequestModel list = WorkRequestAdapter.data.get(0);
     private String name, image;
+    private String time = "";
+    String timeInMillis = "";
+
+    private ProgressDialog progressDialog;
+
 
 
     @Override
@@ -54,6 +67,8 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        progressDialog = new ProgressDialog(WorkRequestDetailsActivity.this);
+
         toolbarInflation();
         widgetsInflation();
         addDataToFields();
@@ -63,6 +78,126 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
     }
 
     private void sendOfferClick() {
+        mBtnSendOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                final BottomSheetDialog dialog = new BottomSheetDialog(WorkRequestDetailsActivity.this);
+                dialog.setContentView(R.layout.send_offer_bottom_sheet);
+
+                Spinner mSpinner = dialog.findViewById(R.id.spinner);
+                final TextInputEditText mTxtBudget = dialog.findViewById(R.id.txt_sendoffer_budget);
+                final TextInputEditText mTxtDescription = dialog.findViewById(R.id.txt_sendoffer_desc);
+                Button mBtnSendOffer = dialog.findViewById(R.id.btn_send_offer);
+                Button mBtnCancel = dialog.findViewById(R.id.btn_cancel_offer);
+
+
+                ArrayAdapter adapter = new ArrayAdapter(getBaseContext(),
+                        android.R.layout.simple_spinner_dropdown_item, Helper.getTimeList());
+
+                mSpinner.setAdapter(adapter);
+
+                mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        time = Helper.getTimeList().get(position).substring(0,1);
+                        timeInMillis = TimeUnit.HOURS.toMillis(Long.parseLong(time))+"";
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                mBtnSendOffer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        validateFields(dialog, mTxtBudget, mTxtDescription);
+                    }
+                });
+
+                mBtnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+    }
+
+    private void validateFields(BottomSheetDialog dialog, TextInputEditText mTxtBudget, TextInputEditText mTxtDescription) {
+
+        String budget = mTxtBudget.getText().toString().trim();
+        String description = mTxtDescription.getText().toString().trim();
+
+        if (budget.isEmpty()){
+            mTxtBudget.setError("Required");
+            mTxtBudget.requestFocus();
+            return;
+        }
+
+        if (description.isEmpty()){
+            mTxtDescription.setError("Required");
+            mTxtDescription.requestFocus();
+            return;
+        }
+
+        saveDataToFirestoreDatabase(dialog, budget, description);
+
+    }
+
+    private void saveDataToFirestoreDatabase(final BottomSheetDialog dialog, String budget, String description) {
+
+        progressDialog.setTitle("Wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        String uniqueId = DatabaseHelper.mDatabase.collection("orders").document().getId();
+
+
+        OrderModel model = new OrderModel(timeInMillis, budget, description, DatabaseHelper.Uid,
+                list.getSender_uid(), list.getUid(), uniqueId, System.currentTimeMillis()+"",
+                "false", "status");
+
+        DatabaseHelper.mDatabase.collection("orders").document(uniqueId)
+                .set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Helper.shortToast(getBaseContext(), "Request Sent");
+                    sentRequestSavedToFirestore();
+                    dialog.cancel();
+                    progressDialog.cancel();
+                }else {
+                    Helper.shortToast(getBaseContext(), task.getException().getMessage());
+                    progressDialog.cancel();
+                }
+            }
+        });
+
+    }
+
+    private void sentRequestSavedToFirestore() {
+
+        Map map = new HashMap();
+        map.put("post_id",list.getUid());
+        map.put("uid", DatabaseHelper.Uid);
+
+        DatabaseHelper.mDatabase.collection("send_requests")
+                .add(map).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()){
+
+                }
+            }
+        });
 
 
 
@@ -83,7 +218,7 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
 
                         mTxtName.setText(name);
                         Picasso.get().load(image)
-                                .resize(60, 60)
+                                .resize(500, 500)
                                 .placeholder(R.drawable.image_profile).into(mImgProfile);
 
                     }
@@ -175,4 +310,7 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
             }
         });
     }
+
+
+
 }

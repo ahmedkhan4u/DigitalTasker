@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        android:foreground="@drawable/custom_ripple"
+        android:focusable="true"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_online_status"
+                android:elevation="8dp"
+                android:id="@+id/img_online_status"
+                android:visibility="gone"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/image_profile"
+                android:id="@+id/img_order_profile"
+                android:layout_marginStart="4dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/img_order_profile"
+                android:layout_marginStart="8dp"
+                android:layout_toStartOf="@+id/icon_right"
+                android:layout_marginEnd="8dp"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="John Doe"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                    android:textColor="@color/textColor"
+                    android:textSize="14sp"
+                    android:id="@+id/txt_order_name"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Budget"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+                    android:textSize="13sp"
+                    android:id="@+id/txt_order_budget"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textColor="@color/textColor"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_regular"
+                    android:textSize="13sp"
+                    android:id="@+id/txt_order_time_required"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+                    android:textSize="13sp"
+                    android:id="@+id/txt_order_description"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Time Ago"
+                    android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+                    android:textSize="12sp"
+                    android:id="@+id/txt_order_timeago"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:padding="4dp"
+                    android:layout_margin="12dp"
+                    android:layout_marginTop="16dp"
+                    >
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/btn_round_corners"
+                        android:text="Cancel"
+                        android:textColor="@android:color/white"
+                        android:textAllCaps="false"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                        android:id="@+id/btn_order_cancel"
+                        />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/btn_round_corners"
+                        android:text="Accept"
+                        android:textColor="@android:color/white"
+                        android:textAllCaps="false"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                        android:id="@+id/btn_order_accept"
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_arrow_right"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/icon_right"
+                />
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.MyWorkRequestActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.PhoneAuthActivity;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.ViewOrdersActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.WorkRequestsActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
@@ -30,7 +32,8 @@ public class MoreFragment extends Fragment {
 
     private View mView;
     private TextView mLogout;
-    private TextView mTxtWorkRequests;
+    private TextView mTxtWorkRequests, mTxtViewOrders;
+    private TextView mTxtViewRequests;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,8 +44,29 @@ public class MoreFragment extends Fragment {
         widgetsInflation();
         logoutClick();
         workRequestsClick();
+        viewOrdersClick();
+        viewRequestsClick();
 
         return mView;
+    }
+
+    private void viewRequestsClick() {
+
+        mTxtViewRequests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), MyWorkRequestActivity.class));
+            }
+        });
+    }
+
+    private void viewOrdersClick() {
+        mTxtViewOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ViewOrdersActivity.class));
+            }
+        });
     }
 
     private void workRequestsClick() {
@@ -96,6 +120,9 @@ public class MoreFragment extends Fragment {
     private void widgetsInflation() {
         mLogout = mView.findViewById(R.id.logout);
         mTxtWorkRequests = mView.findViewById(R.id.txt_work_request);
+        mTxtViewOrders = mView.findViewById(R.id.txt_view_orders);
+        mTxtViewRequests = mView.findViewById(R.id.txt_view_requests);
+
     }
 
 }

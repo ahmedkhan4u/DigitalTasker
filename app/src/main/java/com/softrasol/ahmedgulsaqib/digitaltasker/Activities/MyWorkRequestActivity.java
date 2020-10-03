@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -16,8 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.WorkRequestAdapter;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.MyWorkRequestAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Helper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.ProgressDialogClass;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.WorkRequestModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
@@ -27,31 +27,27 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class WorkRequestsActivity extends AppCompatActivity {
+public class MyWorkRequestActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
     private List<WorkRequestModel> list = new ArrayList<>();
-
-
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_work_requests);
+        setContentView(R.layout.activity_my_work_request);
 
         toolbarInflation();
         recyclerViewImplementation();
-
 
     }
 
     private void recyclerViewImplementation() {
 
-        mRecyclerView = findViewById(R.id.recylerview_work_requests);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(WorkRequestsActivity.this));
-        ProgressDialogClass.showProgressBar(WorkRequestsActivity.this);
+        mRecyclerView = findViewById(R.id.recyclerview_mywork_requests);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(MyWorkRequestActivity.this));
 
-
+        ProgressDialogClass.showProgressBar(MyWorkRequestActivity.this);
 
         DatabaseHelper.mDatabase.collection("work_requests")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -61,41 +57,37 @@ public class WorkRequestsActivity extends AppCompatActivity {
                         list.clear();
 
                         if ( e != null){
+                            Helper.logMessage(e.getMessage());
                             ProgressDialogClass.cancelDialog();
                             return;
                         }
 
                         if (!queryDocumentSnapshots.isEmpty()){
-
                             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots){
 
                                 WorkRequestModel model = snapshot.toObject(WorkRequestModel.class);
-                                if (!model.getSender_uid().equals(DatabaseHelper.Uid)){
+                                if (model.getSender_uid().equalsIgnoreCase(DatabaseHelper.Uid)){
                                     list.add(model);
                                 }
                                 ProgressDialogClass.cancelDialog();
-
                             }
 
-                            WorkRequestAdapter adapter = new WorkRequestAdapter(WorkRequestsActivity.this,list);
+                            MyWorkRequestAdapter adapter = new MyWorkRequestAdapter(getApplicationContext(), list);
                             mRecyclerView.setAdapter(adapter);
 
-//                            if (list.isEmpty()){
-//                                ProgressDialogClass.cancelDialog();
-//                            }
-
+                            if (list.isEmpty()){
+                                ProgressDialogClass.cancelDialog();
+                            }
                         }
-
                     }
                 });
-
 
     }
 
     private void toolbarInflation() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         TextView textView = toolbar.findViewById(R.id.toolbarText);
-        textView.setText("Work Requests");
+        textView.setText("My Work Requests");
         ImageButton mBtnBack = toolbar.findViewById(R.id.btnBack);
         mBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,3 +98,4 @@ public class WorkRequestsActivity extends AppCompatActivity {
     }
 
 }
+

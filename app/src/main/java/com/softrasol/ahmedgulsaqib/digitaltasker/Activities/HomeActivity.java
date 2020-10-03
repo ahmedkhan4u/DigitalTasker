@@ -129,70 +129,6 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         });
     }
 
-//    private void postWorkRequest() {
-//
-//        final BottomSheetDialog dialog = new BottomSheetDialog(HomeActivity.this);
-//        dialog.setContentView(R.layout.post_work_request);
-//
-//        final TextInputEditText mTxtTitle = dialog.findViewById(R.id.txt_postrequest_title);
-//        final TextInputEditText mTxtDesc = dialog.findViewById(R.id.txt_postrequest_desc);
-//        final TextInputEditText mTxtPrice = dialog.findViewById(R.id.txt_postrequest_price);
-//        final TextView mTxtDate = dialog.findViewById(R.id.txt_postrequest_date);
-//
-//        mTxtDate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                datePicker(mTxtDate);
-//            }
-//        });
-//
-//        Button mBtnPost = dialog.findViewById(R.id.btn_post_request);
-//
-//
-//        mBtnPost.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                String title = mTxtTitle.getText().toString().trim();
-//                String description = mTxtDesc.getText().toString().trim();
-//                String price = mTxtPrice.getText().toString().trim();
-//
-//                if (title.isEmpty()){
-//                    mTxtTitle.setError("Required");
-//                    mTxtTitle.requestFocus();
-//                    return;
-//                }
-//
-//                if (description.isEmpty()){
-//                    mTxtDesc.setError("Required");
-//                    mTxtDesc.requestFocus();
-//                    return;
-//                }
-//
-//                if (price.isEmpty()){
-//                    mTxtPrice.setError("Required");
-//                    mTxtPrice.requestFocus();
-//                    return;
-//                }
-//
-//                //saveWorkRequestToFirestore(dialog, title, description, price);
-//
-//
-//            }
-//        });
-//
-//        mBtnCancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.cancel();
-//            }
-//        });
-//
-//        dialog.show();
-//
-//    }
-
-
     private void tabLayout() {
         TabsAccessorAdapter tabsAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager());
         tabsAccessorAdapter.setFragment(new HomeFragment(), "");
@@ -403,49 +339,6 @@ public class HomeActivity extends AppCompatActivity implements ToastMessage {
         super.onDestroy();
     }
 
-    private void datePicker(final TextView mTxtDate){
-
-        // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                        date_time = ""+dayOfMonth + "/" + Helper.getMonth(monthOfYear + 1) + "/" + year;
-                        //*************Call Time Picker Here ********************
-                        tiemPicker(mTxtDate);
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
-
-    private void tiemPicker(final TextView mTxtDate){
-        // Get Current Time
-        final Calendar c = Calendar.getInstance();
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
-
-        // Launch Time Picker Dialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                new TimePickerDialog.OnTimeSetListener() {
-
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        mHour = hourOfDay;
-                        mMinute = minute;
-
-                        mTxtDate.setText(date_time+" - "+hourOfDay + "H" + minute+"M ");
-                    }
-                }, mHour, mMinute, false);
-        timePickerDialog.show();
-    }
 
     public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
