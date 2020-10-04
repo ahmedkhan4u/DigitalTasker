@@ -67,9 +67,8 @@ public class ViewOrdersRequestActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots){
 
                                 OrderModel model = snapshot.toObject(OrderModel.class);
-                                if (data.getSender_uid().equalsIgnoreCase(DatabaseHelper.Uid)
-                                        && data.getUid().equals(model.getRequest_id())
-                                        && !model.getIs_accepted().equals("false") ){
+                                if (data.getSender_uid().equalsIgnoreCase(DatabaseHelper.Uid) && data.getUid().equals(model.getRequest_id())
+                                        && model.getIs_accepted().equals("false") ){
                                     list.add(model);
                                 }
 

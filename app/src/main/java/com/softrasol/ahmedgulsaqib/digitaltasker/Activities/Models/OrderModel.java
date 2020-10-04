@@ -1,5 +1,8 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class OrderModel {
 
     private String time, budget, description, sender_id, reciever_id, request_id, uid, time_stamp, is_accepted, status;

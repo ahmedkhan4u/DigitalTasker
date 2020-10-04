@@ -70,7 +70,7 @@ public class WorkRequestsActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots){
 
                                 WorkRequestModel model = snapshot.toObject(WorkRequestModel.class);
-                                if (!model.getSender_uid().equals(DatabaseHelper.Uid)){
+                                if (!model.getSender_uid().equalsIgnoreCase(DatabaseHelper.Uid)){
                                     list.add(model);
                                 }
                                 ProgressDialogClass.cancelDialog();

@@ -24,7 +24,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ViewOrdersRequestActivity"></activity>
+        <activity android:name=".Activities.OrderDetailsActivity"></activity>
+        <activity android:name=".Activities.ViewOrdersRequestActivity" />
         <activity android:name=".Activities.MyWorkRequestActivity" />
         <activity android:name=".Activities.ViewOrdersActivity" />
         <activity android:name=".Activities.WorkRequestDetailsActivity" />

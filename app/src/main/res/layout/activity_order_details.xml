@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activities.OrderDetailsActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <include layout="@layout/custom_toolbar"
+            android:id="@+id/toolbar"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            android:foreground="@drawable/custom_ripple"
+            android:focusable="true"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_online_status"
+                    android:elevation="8dp"
+                    android:id="@+id/img_online_status"
+                    android:visibility="gone"
+                    />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/image_profile"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/img_orderdetail_profile"
+                    android:layout_marginStart="4dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/img_orderdetail_profile"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="John Doe"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                        android:textColor="@color/textColor"
+                        android:textSize="14sp"
+                        android:id="@+id/txt_orderdetail_name"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                        android:textSize="13sp"
+                        android:layout_marginTop="4dp"
+                        android:id="@+id/txt_orderdetail_address"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Budget"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                        android:textSize="13sp"
+                        android:id="@+id/txt_orderdetails_budget"
+                        android:layout_marginTop="4dp"
+
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                        android:textSize="13sp"
+                        android:id="@+id/txt_orderdetails_description"
+                        android:layout_marginTop="4dp"
+
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Time Required"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                        android:textSize="13sp"
+                        android:layout_marginTop="4dp"
+                        android:id="@+id/txt_orderdetail_time_required"
+                        />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_margin="24dp"
+            android:id="@+id/lklkjlkkjkl"
+            />
+
+
+    </LinearLayout>
+
+
+</ScrollView>

@@ -95,6 +95,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         Map map = new HashMap<>();
         map.put("is_accepted", "true");
         map.put("time_stamp", System.currentTimeMillis()+"");
+        map.put("status", "Pending");
 
         DatabaseHelper.mDatabase.collection("orders").document(model.getUid())
                 .update(map).addOnCompleteListener(new OnCompleteListener() {
@@ -102,6 +103,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()){
                     Helper.shortToast(context, "Order Accepted");
+
+                    DatabaseHelper.mDatabase.collection("work_requests").document(model.getRequest_id())
+                            .delete();
 
                     String uniqueKey = DatabaseHelper.mDatabase.
                             collection("notifications").document().getId();
@@ -170,7 +174,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     private void cancelOrderRequestDialog(final OrderModel model) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
         builder1.setTitle("Alert!");
-        builder1.setMessage("Are you sure you want to exit.");
+        builder1.setMessage("Are you want to cancel request.");
         builder1.setCancelable(true);
 
         builder1.setPositiveButton(
