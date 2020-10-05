@@ -104,8 +104,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Time Required"
-                        android:fontFamily="@font/radomir_tinkov_gilroy_bold"
-                        android:textSize="13sp"
+                        android:fontFamily="@font/radomir_tinkov_gilroy_medium"
+                        android:gravity="center"
+                        android:textSize="14sp"
                         android:layout_marginTop="4dp"
                         android:id="@+id/txt_orderdetail_time_required"
                         />
@@ -118,14 +119,41 @@
 
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="24dp"
-            android:id="@+id/lklkjlkkjkl"
+            android:id="@+id/qr_code"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/btn_scan_qr_code"
+            android:background="@drawable/btn_round_corners"
+            android:text="Scan QR Code"
+            android:textSize="16sp"
+            android:layout_margin="16dp"
+            android:textColor="@android:color/white"
+            android:layout_alignParentBottom="true"
+            android:textAllCaps="false"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/btn_cancel_order"
+            android:background="@drawable/btn_round_corners"
+            android:text="Cancel Order"
+            android:textSize="16sp"
+            android:layout_margin="16dp"
+            android:textColor="@android:color/white"
+            android:layout_alignParentBottom="true"
+            android:textAllCaps="false"
+            android:onClick="CancelOrder"
             />
 
 
     </LinearLayout>
-
 
 </ScrollView>

@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/review_profileImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/image_profile" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:id="@+id/layout"
+        android:layout_toEndOf="@+id/review_profileImage"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/review_personName"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_marginEnd="120dp"
+                android:layout_height="wrap_content"
+                android:text="Panera Beard"
+                android:textColor="@color/textColor"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="4"
+                android:textColor="@color/textColor"
+                android:layout_marginStart="4dp"
+                android:id="@+id/review_rating"
+                />
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/review_ratingBar"
+                android:theme="@style/Widget.AppCompat.RatingBar"
+                android:layout_toLeftOf="@+id/review_rating"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_marginEnd="4dp"
+                android:progressTint="@color/colorPrimary"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/review_personComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="johndoe@email.com"
+            android:textColor="@color/textColor"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/review_timeAgo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Time Ago"
+            android:textColor="@color/textColor"
+            android:textSize="11sp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layout"
+        android:layout_marginTop="40dp"
+        android:background="@color/colorEdtOutline" />
+</RelativeLayout>

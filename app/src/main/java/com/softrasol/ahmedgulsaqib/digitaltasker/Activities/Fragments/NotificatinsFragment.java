@@ -61,8 +61,7 @@ public class NotificatinsFragment extends Fragment {
     private void getNotificationFromFirestore() {
 
         DatabaseHelper.mDatabase.collection("notifications").
-                whereEqualTo("reciever_uid", DatabaseHelper.Uid)
-                .orderBy("time_stamp").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
@@ -77,7 +76,9 @@ public class NotificatinsFragment extends Fragment {
                     for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots){
 
                         NotificationsModel model = snapshot.toObject(NotificationsModel.class);
-                        list.add(model);
+                        if (model.getReciever_uid().equalsIgnoreCase(DatabaseHelper.Uid)){
+                            list.add(model);
+                        }
 
                     }
 

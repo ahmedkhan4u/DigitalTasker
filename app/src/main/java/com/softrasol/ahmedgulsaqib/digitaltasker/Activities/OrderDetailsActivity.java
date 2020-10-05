@@ -1,21 +1,41 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Adapters.MyOrdersAdapter;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Helper;
@@ -24,7 +44,9 @@ import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -35,16 +57,37 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private CircleImageView mImgProfile;
     private TextView mTxtName, mTxtBudget, mTxtAddress, mTxtDescription, mTxtTimeRequired;
 
-    private OrderModel list = MyOrdersAdapter.data.get(0);
+    public static OrderModel list = MyOrdersAdapter.data.get(0);
+    private Button mBtnScanCode;
+    private ImageView imageViewQrCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
+
+
+
         toolbarInflation();
         widgetsInflation();
-
+        scannerView();
+        btnScanCode();
         getDetailsFromFirestore();
+
+
+    }
+
+    private void scannerView() {
+    }
+
+    private void btnScanCode() {
+
+        mBtnScanCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), BarCodeScannerActivity.class));
+            }
+        });
 
     }
 
@@ -67,6 +110,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     mTxtBudget.setText("Budget: "+model.getBudget());
                     mTxtDescription.setText("Description: "+model.getDescription());
 
+                    if (model.getStatus().equalsIgnoreCase("Cancelled") ||
+                            model.getStatus().equalsIgnoreCase("Completed")){
+                        mBtnScanCode.setVisibility(View.GONE);
+                        imageViewQrCode.setVisibility(View.GONE);
+                        mTxtTimeRequired.setText("Time Passed");
+                    }
+
                     CountDownTimer timer = new CountDownTimer(Long.parseLong(model.getTime_stamp()), 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
@@ -74,7 +124,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                             long minutes = seconds / 60;
                             long hours = minutes / 60;
                             long days = hours / 24;
-                            String time = days + ":" + hours % 24 + ":" + minutes % 60 + ":" + seconds % 60;
+                            String time = "Time Left : "+hours % 24 + " hr " + minutes % 60 + " min " + seconds % 60+" sec ";
                             mTxtTimeRequired.setText(time);
                         }
 
@@ -123,6 +173,17 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                     mTxtName.setText("Name: "+model.getName());
                     mTxtAddress.setText("Address: "+model.getAddress());
+
+
+                    try {
+                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                        Bitmap bitmap = barcodeEncoder.encodeBitmap(list.getUid(), BarcodeFormat.QR_CODE, 400, 400);
+                        imageViewQrCode = (ImageView) findViewById(R.id.qr_code);
+                        imageViewQrCode.setImageBitmap(bitmap);
+                    } catch(Exception ex) {
+                        Helper.logMessage("QR Code Exception : "+ ex.getMessage());
+                    }
+
                 }
 
             }
@@ -138,6 +199,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         mTxtAddress = findViewById(R.id.txt_orderdetail_address);
         mTxtDescription = findViewById(R.id.txt_orderdetails_description);
         mTxtTimeRequired = findViewById(R.id.txt_orderdetail_time_required);
+        mBtnScanCode = findViewById(R.id.btn_scan_qr_code);
 
     }
 
@@ -152,5 +214,47 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+
+    public void CancelOrder(View view) {
+        cancelOrder();
+    }
+
+    private void cancelOrder() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(OrderDetailsActivity.this);
+        builder1.setTitle("Alert!");
+        builder1.setMessage("Are you sure you want to cancel order.");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Map map = new HashMap();
+                        map.put("status", "Cancelled");
+                        DatabaseHelper.mDatabase.collection("orders").document(OrderDetailsActivity.list.getUid())
+                                .update(map).addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                                if (task.isSuccessful()){
+                                    Helper.shortToast(getApplicationContext(), "Order Cancelled");
+                                }
+                            }
+                        });
+                        dialog.cancel();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }

@@ -66,27 +66,31 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         holder.mTxtTitle.setText(model.getTitle());
         holder.mTxtBody.setText(model.getBody());
-//        long time_stamp = Long.parseLong(model.getTime_stamp());
-        //holder.mTxtDateTime.setText(GetTimeAgo.getTimeAgo(time_stamp, context));
+        try {
+            long time_stamp = Long.parseLong(model.getTime_stamp());
+            holder.mTxtDateTime.setText(GetTimeAgo.getTimeAgo(time_stamp, context));
+        }catch (Exception e){}
 
 
     }
 
     private void getProfileImage(final ViewHolder holder, NotificationsModel model) {
 
-        DatabaseHelper.mDatabase.collection("users")
-                .document(model.getReciever_uid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+       if (!model.getSender_uid().equalsIgnoreCase("admin")) {
+           DatabaseHelper.mDatabase.collection("users")
+                   .document(model.getSender_uid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+               @Override
+               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                UserDataModel model = task.getResult().toObject(UserDataModel.class);
+                   UserDataModel model = task.getResult().toObject(UserDataModel.class);
 
-                Picasso.get().load(model.getProfile_img()).placeholder(R.drawable.image_profile)
-                        .resize(50, 50).into(holder.mImgProfile);
+                   Picasso.get().load(model.getProfile_img()).placeholder(R.drawable.image_profile)
+                           .resize(50, 50).into(holder.mImgProfile);
 
-            }
-        });
+               }
+           });
 
+       }
     }
 
 

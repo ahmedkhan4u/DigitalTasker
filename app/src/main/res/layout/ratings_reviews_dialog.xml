@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Share Your Experience"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/rating_bar"
+        android:theme="@style/Widget.AppCompat.RatingBar"
+        android:stepSize="1"
+        android:rating="1"
+        android:layout_marginTop="16dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/outline_grey"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor"
+        android:padding="10dp"
+        android:lines="3"
+        android:hint="Write a review..."
+        android:id="@+id/txt_review"
+        android:maxLines="1"
+        android:layout_marginTop="10dp"
+        />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/btn_round_corners"
+        android:layout_marginTop="16dp"
+        android:text="Submit"
+        android:inputType="text"
+        android:scrollHorizontally="true"
+        android:maxLength="400"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:id="@+id/btn_submit_review"
+        android:layout_marginBottom="8dp"
+        />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/btn_round_corners"
+        android:text="Cancel"
+        android:inputType="text"
+        android:scrollHorizontally="true"
+        android:maxLength="400"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:id="@+id/btn_dialogCancel"
+        android:onClick="SubmitClick"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp"
+        />
+
+
+</LinearLayout>

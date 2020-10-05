@@ -63,8 +63,19 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/btn_back_ripple"
-                        android:src="@drawable/ic_report"
+                        android:src="@drawable/ic_reviews"
                         android:layout_marginStart="16dp"
+                        android:padding="2dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginEnd="16dp"
+                        android:onClick="ReviewsClick"
+                        />
+
+                    <ImageButton
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/btn_back_ripple"
+                        android:src="@drawable/ic_report"
                         android:padding="2dp"
                         android:scaleType="fitXY"
                         android:layout_marginEnd="16dp"

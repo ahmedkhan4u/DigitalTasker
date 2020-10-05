@@ -43,7 +43,9 @@ public class PendingOrdersFragment extends Fragment {
         mView =  inflater.inflate(R.layout.fragment_pending_orders, container, false);
 
         mRecyclerView = mView.findViewById(R.id.recycelrview_orders);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setReverseLayout(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         getPendingOrdersFromFirestore();
 
@@ -66,9 +68,9 @@ public class PendingOrdersFragment extends Fragment {
                     for (DocumentSnapshot snapshot : queryDocumentSnapshots){
 
                         OrderModel model = snapshot.toObject(OrderModel.class);
-                        if (model.getReciever_id().equals(DatabaseHelper.Uid)
-                                || model.getSender_id().equals(DatabaseHelper.Uid)
-                                && model.getIs_accepted().equals("true")
+                        if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)
+                                || model.getSender_id().equalsIgnoreCase(DatabaseHelper.Uid)
+                                && model.getIs_accepted().equalsIgnoreCase("true")
                                 && model.getStatus().equalsIgnoreCase("Pending")
                         )
                         {

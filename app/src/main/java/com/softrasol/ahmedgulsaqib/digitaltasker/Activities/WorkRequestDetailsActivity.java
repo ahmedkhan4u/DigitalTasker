@@ -147,9 +147,7 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
             mTxtDescription.requestFocus();
             return;
         }
-
         saveDataToFirestoreDatabase(dialog, budget, description);
-
     }
 
     private void saveDataToFirestoreDatabase(final BottomSheetDialog dialog, String budget, String description) {
@@ -163,7 +161,7 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
 
         OrderModel model = new OrderModel(timeInMillis, budget, description, DatabaseHelper.Uid,
                 list.getSender_uid(), list.getUid(), uniqueId, System.currentTimeMillis()+"",
-                "false", "status");
+                "false", "Pending");
 
         DatabaseHelper.mDatabase.collection("orders").document(uniqueId)
                 .set(model).addOnCompleteListener(new OnCompleteListener<Void>() {

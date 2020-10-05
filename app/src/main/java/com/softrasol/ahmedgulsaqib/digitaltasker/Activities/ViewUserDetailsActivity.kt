@@ -223,7 +223,13 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
 
         bottomSheetDialog.show()
 
-
     }
 
+    fun ReviewsClick(view: View) {
+
+        val intent =  Intent(this@ViewUserDetailsActivity, ReviewsActivity::class.java);
+        intent.putExtra("uid", mUid)
+        startActivity(intent)
+
+    }
 }
