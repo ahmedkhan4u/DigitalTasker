@@ -62,7 +62,6 @@ public class TrasactionsAdapter extends RecyclerView.Adapter<TrasactionsAdapter.
 
         long timeAgo = Long.parseLong(model.getTime_stamp());
         holder.mTxtTime.setText(GetTimeAgo.getTimeAgo(timeAgo, context));
-        holder.mTxtTime.setText(TimeUnit.MILLISECONDS.toHours(Long.parseLong(model.getTime()))+"");
 
         if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)){
             holder.mTxtPrice.setText("PKR "+model.getBudget());

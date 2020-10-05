@@ -29,6 +29,7 @@ public class TransactionsActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private TextView mTxtTotalTransactions;
     private List<OrderModel> list = new ArrayList<>();
+    private double total = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +37,10 @@ public class TransactionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transactions);
         toolbarInflation();
         mRecyclerView = findViewById(R.id.recyclerview_transactions);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mTxtTotalTransactions = findViewById(R.id.txt_transactions_price);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setReverseLayout(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mTxtTotalTransactions = findViewById(R.id.txt_transaction_price);
 
         DatabaseHelper.mDatabase.collection("orders").orderBy("time_stamp", Query.Direction.ASCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -45,15 +48,22 @@ public class TransactionsActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
 
-                            if (!task.getResult().isEmpty()){
-                                for (QueryDocumentSnapshot snapshot : task.getResult()){
 
+                            if (!task.getResult().isEmpty()){
+
+                                for (QueryDocumentSnapshot snapshot : task.getResult()){
                                     OrderModel model = snapshot.toObject(OrderModel.class);
                                     if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)
                                     || model.getSender_id().equalsIgnoreCase(DatabaseHelper.Uid)
                                             && model.getStatus().equalsIgnoreCase("Completed")
                                     ){
                                         list.add(model);
+
+                                        if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)){
+                                            total = total + Double.parseDouble(model.getBudget());
+                                            mTxtTotalTransactions.setText(total+"");
+                                        }
+
                                     }
                                 }
                                 TrasactionsAdapter adapter = new TrasactionsAdapter(TransactionsActivity.this, list);

@@ -53,7 +53,12 @@ public class MoreFragment extends Fragment {
     }
 
     private void transactionsClick() {
-        startActivity(new Intent(getActivity(), TransactionsActivity.class));
+        mTxtTransactions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), TransactionsActivity.class));
+            }
+        });
     }
 
     private void viewRequestsClick() {
@@ -128,7 +133,7 @@ public class MoreFragment extends Fragment {
         mTxtWorkRequests = mView.findViewById(R.id.txt_work_request);
         mTxtViewOrders = mView.findViewById(R.id.txt_view_orders);
         mTxtViewRequests = mView.findViewById(R.id.txt_view_requests);
-
+        mTxtTransactions = mView.findViewById(R.id.txt_transaction_click);
     }
 
 }

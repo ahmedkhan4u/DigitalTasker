@@ -37,7 +37,7 @@
             android:layout_marginStart="100dp"
             android:drawablePadding="8dp"
             android:textAlignment="textEnd"
-            android:id="@+id/txt_transactions_price"
+            android:id="@+id/txt_transaction_price"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:fontFamily="@font/radomir_tinkov_gilroy_regular"
@@ -48,7 +48,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/recyclerview_transactions"
         />
 

@@ -12,7 +12,6 @@
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
         android:foreground="@drawable/custom_ripple"
-        android:focusable="true"
         >
         <RelativeLayout
             android:layout_width="match_parent"
