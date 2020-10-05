@@ -138,6 +138,30 @@
         <!--- .............. -->
 
 
+        <!--- .............. -->
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transactions"
+            android:textColor="@color/textColor"
+            android:padding="16dp"
+            android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+            android:textSize="16sp"
+            android:id="@+id/txt_transactions"
+            android:foreground="@drawable/custom_ripple"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary" />
+
+
+        <!--- .............. -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,6 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    app:cardCornerRadius="8dp"
+    app:cardUseCompatPadding="true"
+    >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+                android:gravity="center"
+                android:text="Budget"
+                android:textColor="@color/textColor"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PKR"
+                android:textSize="12sp"
+                android:layout_marginStart="100dp"
+                android:drawablePadding="8dp"
+                android:textAlignment="textEnd"
+                android:id="@+id/txt_transactions_price"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="@font/radomir_tinkov_gilroy_regular"
+                android:textColor="@color/textColor"
+                />
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time Ago"
+            android:textSize="12sp"
+            android:drawablePadding="8dp"
+            android:textAlignment="textEnd"
+            android:id="@+id/txt_transactions_time"
+            android:layout_marginTop="8dp"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/radomir_tinkov_gilroy_regular"
+            android:textColor="@color/textColor"
+            />
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

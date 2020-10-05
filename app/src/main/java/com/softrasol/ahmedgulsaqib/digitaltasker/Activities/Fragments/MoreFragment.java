@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.MyWorkRequestActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.PhoneAuthActivity;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.TransactionsActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.ViewOrdersActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.WorkRequestsActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
@@ -33,7 +34,7 @@ public class MoreFragment extends Fragment {
     private View mView;
     private TextView mLogout;
     private TextView mTxtWorkRequests, mTxtViewOrders;
-    private TextView mTxtViewRequests;
+    private TextView mTxtViewRequests, mTxtTransactions;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,8 +47,13 @@ public class MoreFragment extends Fragment {
         workRequestsClick();
         viewOrdersClick();
         viewRequestsClick();
+        transactionsClick();
 
         return mView;
+    }
+
+    private void transactionsClick() {
+        startActivity(new Intent(getActivity(), TransactionsActivity.class));
     }
 
     private void viewRequestsClick() {
