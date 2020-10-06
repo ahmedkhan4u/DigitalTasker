@@ -1,12 +1,14 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities
 
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -15,15 +17,21 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.DatabaseHelper
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Helper
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Helper.Notification
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.NotificationsModel
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.OrderModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.R
 import com.squareup.picasso.Picasso
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMessage {
 
@@ -43,6 +51,11 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
     lateinit var mName : String
     lateinit var mImgUrl : String
 
+    var time = ""
+    var timeInMillis = ""
+
+    private val progressDialog: ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_user_details)
@@ -54,6 +67,7 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
         googleMapFragment()
         fetchDataFromFirestoreDatabase()
 
+        //progressDialog = ProgressDialog(this)
 
     }
 
@@ -232,4 +246,121 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
         startActivity(intent)
 
     }
+
+    fun SendOfferClick(view: View) {
+
+        val dialog = BottomSheetDialog(this@ViewUserDetailsActivity)
+        dialog.setContentView(R.layout.send_offer_bottom_sheet)
+
+        val mSpinner = dialog.findViewById<Spinner>(R.id.spinner)
+        val mTxtBudget =
+            dialog.findViewById<TextInputEditText>(R.id.txt_sendoffer_budget)
+        val mTxtDescription =
+            dialog.findViewById<TextInputEditText>(R.id.txt_sendoffer_desc)
+        val mBtnSendOffer =
+            dialog.findViewById<Button>(R.id.btn_send_offer)
+        val mBtnCancel =
+            dialog.findViewById<Button>(R.id.btn_cancel_offer)
+
+
+        val adapter: ArrayAdapter<*> = ArrayAdapter<Any?>(
+            baseContext,
+            android.R.layout.simple_spinner_dropdown_item,
+            Helper.getTimeList() as List<Any?>
+        )
+
+        mSpinner!!.adapter = adapter
+
+        mSpinner!!.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                time =
+                    Helper.getTimeList()[position].substring(0, 1)
+                timeInMillis =
+                    TimeUnit.HOURS.toMillis(time.toLong()).toString() + ""
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        mBtnSendOffer!!.setOnClickListener {
+            if (mTxtBudget != null) {
+                if (mTxtDescription != null) {
+                    validateFields(dialog, mTxtBudget, mTxtDescription)
+                }
+            }
+        }
+
+        mBtnCancel!!.setOnClickListener { dialog.cancel() }
+
+        dialog.show()
+
+    }
+
+    private fun validateFields(
+        dialog: BottomSheetDialog,
+        mTxtBudget: TextInputEditText,
+        mTxtDescription: TextInputEditText
+    ) {
+        val budget = mTxtBudget.text.toString().trim { it <= ' ' }
+        val description = mTxtDescription.text.toString().trim { it <= ' ' }
+        if (budget.isEmpty()) {
+            mTxtBudget.error = "Required"
+            mTxtBudget.requestFocus()
+            return
+        }
+        if (description.isEmpty()) {
+            mTxtDescription.error = "Required"
+            mTxtDescription.requestFocus()
+            return
+        }
+        saveDataToFirestoreDatabase(dialog, budget, description)
+    }
+
+    private fun saveDataToFirestoreDatabase(
+        dialog: BottomSheetDialog,
+        budget: String,
+        description: String
+    ) {
+        progressDialog?.setTitle("Wait...")
+        progressDialog?.setCancelable(false)
+        progressDialog?.show()
+        val uniqueId =
+            DatabaseHelper.mDatabase.collection("orders").document().id
+        val model = OrderModel(
+            timeInMillis,
+            budget,
+            description,
+            DatabaseHelper.Uid,
+            mUid,
+            "",
+            uniqueId,
+            System.currentTimeMillis().toString() + "",
+            "true",
+            "Pending"
+        )
+        DatabaseHelper.mDatabase.collection("orders").document(uniqueId)
+            .set(model).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Helper.shortToast(
+                        baseContext,
+                        "Request Sent"
+                    )
+                    //sentRequestSavedToFirestore()
+                    dialog.cancel()
+                    progressDialog?.cancel()
+                } else {
+                    Helper.shortToast(
+                        baseContext,
+                        task.exception!!.message
+                    )
+                    progressDialog?.cancel()
+                }
+            }
+    }
+
 }

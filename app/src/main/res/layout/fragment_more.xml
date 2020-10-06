@@ -14,11 +14,12 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Profile Settings"
+            android:text="Profile"
             android:textColor="@color/textColor"
             android:padding="16dp"
             android:fontFamily="@font/radomir_tinkov_gilroy_bold"
             android:textSize="16sp"
+            android:id="@+id/txt_profile"
             android:foreground="@drawable/custom_ripple"
             />
 
@@ -127,6 +128,7 @@
         android:textColor="@color/textColor"
         android:padding="16dp"
         android:fontFamily="@font/radomir_tinkov_gilroy_bold"
+        android:id="@+id/txt_privacy_policy"
         android:textSize="16sp"
         android:foreground="@drawable/custom_ripple"
         />
@@ -149,6 +151,7 @@
             android:padding="16dp"
             android:fontFamily="@font/radomir_tinkov_gilroy_bold"
             android:textSize="16sp"
+            android:id="@+id/txt_about_us"
             android:foreground="@drawable/custom_ripple"
             />
 

@@ -309,6 +309,4 @@ public class WorkRequestDetailsActivity extends FragmentActivity implements OnMa
         });
     }
 
-
-
 }

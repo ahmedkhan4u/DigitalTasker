@@ -4,10 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +27,13 @@ import android.widget.Toast;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +63,7 @@ import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class OrderDetailsActivity extends AppCompatActivity {
+public class OrderDetailsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private CircleImageView mImgProfile;
     private TextView mTxtName, mTxtBudget, mTxtAddress, mTxtDescription, mTxtTimeRequired;
@@ -60,20 +71,23 @@ public class OrderDetailsActivity extends AppCompatActivity {
     public static OrderModel list = MyOrdersAdapter.data.get(0);
     private Button mBtnScanCode;
     private ImageView imageViewQrCode;
+    private GoogleMap mMap;
+    double lat = 0, lng = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
 
-
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         toolbarInflation();
         widgetsInflation();
         scannerView();
         btnScanCode();
         getDetailsFromFirestore();
-
 
     }
 
@@ -151,9 +165,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     private void getUserDetailsFromFirestore(String id) {
 
-
-
-
         DatabaseHelper.mDatabase.collection("users").document(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -166,11 +177,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()){
 
                     UserDataModel model = documentSnapshot.toObject(UserDataModel.class);
-
+                    lat = Double.parseDouble(model.getLat());
+                    lng = Double.parseDouble(model.getLng());
                     Picasso.get().load(model.getProfile_img())
                             .resize(60, 60)
                             .placeholder(R.drawable.image_profile).into(mImgProfile);
 
+                    onMapReady(mMap);
                     mTxtName.setText("Name: "+model.getName());
                     mTxtAddress.setText("Address: "+model.getAddress());
 
@@ -256,5 +269,36 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mMap = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        LatLng kohatLatLng = new LatLng(33.5612824,71.3974918);
+
+        CameraUpdate location = CameraUpdateFactory.newLatLngZoom(
+                kohatLatLng, 5);
+
+        LatLng latLng = new LatLng(lat, lng);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        mMap.addMarker(markerOptions);
+
+        mMap.animateCamera(location);
+
     }
 }

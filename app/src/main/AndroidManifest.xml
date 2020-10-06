@@ -29,7 +29,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.TransactionsActivity"></activity>
+        <activity android:name=".Activities.ProfileActivity"></activity>
+        <activity android:name=".Activities.PrivacyPolicyActivity" />
+        <activity android:name=".Activities.AboutUsActivity" />
+        <activity android:name=".Activities.TransactionsActivity" />
         <activity android:name=".Activities.ReviewsActivity" />
         <activity android:name=".Activities.BarCodeScannerActivity" />
         <activity android:name=".Activities.OrderDetailsActivity" />

@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.AboutUsActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.MyWorkRequestActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.PhoneAuthActivity;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.PrivacyPolicyActivity;
+import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.ProfileActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.TransactionsActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.ViewOrdersActivity;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.WorkRequestsActivity;
@@ -33,8 +36,8 @@ public class MoreFragment extends Fragment {
 
     private View mView;
     private TextView mLogout;
-    private TextView mTxtWorkRequests, mTxtViewOrders;
-    private TextView mTxtViewRequests, mTxtTransactions;
+    private TextView mTxtWorkRequests, mTxtViewOrders, mTxtProfile;
+    private TextView mTxtViewRequests, mTxtTransactions, mTxtPrivacyPolicy, mTxtAboutUs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,8 +51,40 @@ public class MoreFragment extends Fragment {
         viewOrdersClick();
         viewRequestsClick();
         transactionsClick();
+        privacyPolicyClick();
+        aboutUsClick();
+        profileClick();
 
         return mView;
+    }
+
+    private void profileClick() {
+        mTxtProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ProfileActivity.class));
+            }
+        });
+    }
+
+    private void aboutUsClick() {
+
+        mTxtAboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AboutUsActivity.class));
+            }
+        });
+
+    }
+
+    private void privacyPolicyClick() {
+        mTxtPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), PrivacyPolicyActivity.class));
+            }
+        });
     }
 
     private void transactionsClick() {
@@ -134,6 +169,9 @@ public class MoreFragment extends Fragment {
         mTxtViewOrders = mView.findViewById(R.id.txt_view_orders);
         mTxtViewRequests = mView.findViewById(R.id.txt_view_requests);
         mTxtTransactions = mView.findViewById(R.id.txt_transaction_click);
+        mTxtAboutUs = mView.findViewById(R.id.txt_about_us);
+        mTxtPrivacyPolicy = mView.findViewById(R.id.txt_privacy_policy);
+        mTxtProfile = mView.findViewById(R.id.txt_profile);
     }
 
 }

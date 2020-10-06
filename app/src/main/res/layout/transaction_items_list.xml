@@ -7,6 +7,7 @@
     app:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true"
     android:focusable="true"
+    android:foreground="@drawable/custom_ripple"
     >
 
     <LinearLayout
