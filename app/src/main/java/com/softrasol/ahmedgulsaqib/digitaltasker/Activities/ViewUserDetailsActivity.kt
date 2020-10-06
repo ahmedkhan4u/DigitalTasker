@@ -1,13 +1,14 @@
 package com.softrasol.ahmedgulsaqib.digitaltasker.Activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.AdapterView.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -30,6 +31,7 @@ import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.OrderModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.UserDataModel
 import com.softrasol.ahmedgulsaqib.digitaltasker.R
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.send_offer_bottom_sheet.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -43,6 +45,8 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
     lateinit var mImgProfile : ImageView
     lateinit var mTxtPrice : TextView
 
+    lateinit var mBtnSendOffer : Button
+
     lateinit var mMap : GoogleMap
 
     lateinit var userDetailsList : ArrayList<UserDataModel>
@@ -50,6 +54,8 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
     lateinit var mUid : String
     lateinit var mName : String
     lateinit var mImgUrl : String
+
+    lateinit var isRestrict : String
 
     var time = ""
     var timeInMillis = ""
@@ -71,6 +77,7 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
 
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun fetchDataFromFirestoreDatabase() {
 
         val collectionReference = FirebaseFirestore.getInstance().collection("users")
@@ -86,6 +93,15 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
                 mTxtEmail.text = model?.email
                 mTxtDescriptin.text = model?.description
                 mTxtPrice.text = model?.price
+                isRestrict = model!!.is_restrict
+
+                if (isRestrict.equals("true")){
+                    mBtnSendOffer.isEnabled = false
+                    mBtnSendOffer.setBackgroundColor(R.color.colorEdtOutline)
+                    Helper.shortToast(applicationContext, "User Is Restricted From Getting Orders Right Now");
+                }else{
+                    mBtnSendOffer.isEnabled = true
+                }
 
                 mImgUrl = model!!.profile_img
 
@@ -115,7 +131,8 @@ class ViewUserDetailsActivity : AppCompatActivity(), OnMapReadyCallback, ToastMe
         mTxtAddress = findViewById(R.id.txt_viewuser_detail_address)
         mTxtDescriptin = findViewById(R.id.txt_viewuser_detail_description)
         mImgProfile = findViewById(R.id.img_viewuser_details_profile)
-        mTxtPrice = findViewById(R.id.txt_viewuser_detail_price);
+        mTxtPrice = findViewById(R.id.txt_viewuser_detail_price)
+        mBtnSendOffer = findViewById(R.id.btn_send_offer)
 
     }
 

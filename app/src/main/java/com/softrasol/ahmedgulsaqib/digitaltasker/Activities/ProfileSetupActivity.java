@@ -464,7 +464,7 @@ public class ProfileSetupActivity extends FragmentActivity implements OnMapReady
                 "lng", model.getLng(),
                 "is_verified", model.getIs_verified(),
                 "is_restrict", model.getIs_restrict(),
-                "time_stamp", model.getDate()
+                "time_stamp", System.currentTimeMillis()+""
 
         ).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
