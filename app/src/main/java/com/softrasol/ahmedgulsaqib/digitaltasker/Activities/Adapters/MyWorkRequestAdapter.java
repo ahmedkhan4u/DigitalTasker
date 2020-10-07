@@ -63,7 +63,9 @@ public class MyWorkRequestAdapter extends RecyclerView.Adapter<MyWorkRequestAdap
             public void onClick(View v) {
                 data.clear();
                 data.add(list.get(position));
-                context.startActivity(new Intent(context, ViewOrdersRequestActivity.class));
+                Intent intent = new Intent(context, ViewOrdersRequestActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         });
 

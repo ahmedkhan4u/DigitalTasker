@@ -70,7 +70,10 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             public void onClick(View v) {
                 data.clear();
                 data.add(list.get(position));
-                context.startActivity(new Intent(context, OrderDetailsActivity.class));
+                Intent intent = new Intent(context, OrderDetailsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+
             }
         });
 

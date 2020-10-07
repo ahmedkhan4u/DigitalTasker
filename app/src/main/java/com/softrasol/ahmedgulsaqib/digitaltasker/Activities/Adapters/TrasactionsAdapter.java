@@ -64,9 +64,9 @@ public class TrasactionsAdapter extends RecyclerView.Adapter<TrasactionsAdapter.
         holder.mTxtTime.setText(GetTimeAgo.getTimeAgo(timeAgo, context));
 
         if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)){
-            holder.mTxtPrice.setText("PKR "+model.getBudget());
-        }else {
             holder.mTxtPrice.setText("PKR -"+model.getBudget());
+        }else {
+            holder.mTxtPrice.setText("PKR "+model.getBudget());
         }
 
     }
@@ -84,9 +84,6 @@ public class TrasactionsAdapter extends RecyclerView.Adapter<TrasactionsAdapter.
 
             mTxtPrice = itemView.findViewById(R.id.txt_transactions_price);
             mTxtTime = itemView.findViewById(R.id.txt_transactions_time);
-
-
-
         }
     }
 }

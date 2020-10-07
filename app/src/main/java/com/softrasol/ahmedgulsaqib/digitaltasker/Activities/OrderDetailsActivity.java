@@ -129,6 +129,7 @@ public class OrderDetailsActivity extends FragmentActivity implements OnMapReady
                         mBtnScanCode.setVisibility(View.GONE);
                         imageViewQrCode.setVisibility(View.GONE);
                         mTxtTimeRequired.setText("Time Passed");
+                        mTxtTimeRequired.setVisibility(View.GONE);
                     }
 
                     CountDownTimer timer = new CountDownTimer(Long.parseLong(model.getTime_stamp()), 1000) {
@@ -213,6 +214,7 @@ public class OrderDetailsActivity extends FragmentActivity implements OnMapReady
         mTxtDescription = findViewById(R.id.txt_orderdetails_description);
         mTxtTimeRequired = findViewById(R.id.txt_orderdetail_time_required);
         mBtnScanCode = findViewById(R.id.btn_scan_qr_code);
+        imageViewQrCode = (ImageView) findViewById(R.id.qr_code);
 
     }
 

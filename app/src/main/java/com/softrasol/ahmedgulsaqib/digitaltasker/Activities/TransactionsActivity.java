@@ -54,16 +54,22 @@ public class TransactionsActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot snapshot : task.getResult()){
                                     OrderModel model = snapshot.toObject(OrderModel.class);
                                     if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)
-                                    || model.getSender_id().equalsIgnoreCase(DatabaseHelper.Uid)
                                             && model.getStatus().equalsIgnoreCase("Completed")
                                     ){
                                         list.add(model);
 
-                                        if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)){
-                                            total = total + Double.parseDouble(model.getBudget());
-                                            mTxtTotalTransactions.setText(total+"");
-                                        }
+//                                        if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)){
+//                                            total = total + Double.parseDouble(model.getBudget());
+//                                            mTxtTotalTransactions.setText(total+"");
+//                                        }
 
+                                    }
+                                    if (model.getSender_id().equalsIgnoreCase(DatabaseHelper.Uid)
+                                    && model.getStatus().equalsIgnoreCase("Completed")
+                                    ){
+                                        list.add(model);
+                                        total = total + Double.parseDouble(model.getBudget());
+                                        mTxtTotalTransactions.setText(total+"");
                                     }
                                 }
                                 TrasactionsAdapter adapter = new TrasactionsAdapter(TransactionsActivity.this, list);

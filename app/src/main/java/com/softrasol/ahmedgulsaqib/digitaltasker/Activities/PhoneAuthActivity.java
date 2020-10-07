@@ -3,6 +3,7 @@ package com.softrasol.ahmedgulsaqib.digitaltasker.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -25,12 +27,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Interfaces.ToastMessage;
 import com.softrasol.ahmedgulsaqib.digitaltasker.Activities.Models.NotificationsModel;
 import com.softrasol.ahmedgulsaqib.digitaltasker.R;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -50,6 +60,53 @@ public class PhoneAuthActivity extends AppCompatActivity implements ToastMessage
         setContentView(R.layout.activity_phone_auth);
 
         mAuth = FirebaseAuth.getInstance();
+
+        pemissionsCheck();
+
+
+    }
+
+    private void pemissionsCheck() {
+
+        Dexter.withContext(PhoneAuthActivity.this)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ).withListener(new MultiplePermissionsListener() {
+            @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                MultiplePermissionsListener dialogMultiplePermissionsListener =
+                        DialogOnAnyDeniedMultiplePermissionsListener.Builder
+                                .withContext(PhoneAuthActivity.this)
+                                .withTitle("Storage Camera & Location permission")
+                                .withMessage("Both camera and storage permission are needed to take pictures users")
+                                .withButtonText(android.R.string.ok)
+                                .withIcon(R.mipmap.ic_launcher)
+                                .build();
+
+
+                MultiplePermissionsListener snackbarMultiplePermissionsListener =
+                        SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
+                                .with(findViewById(R.id.view), "Camera and audio access is needed to take pictures of your dog")
+                                .withOpenSettingsButton("Settings")
+                                .withCallback(new Snackbar.Callback() {
+                                    @Override
+                                    public void onShown(Snackbar snackbar) {
+                                        // Event handler for when the given Snackbar is visible
+                                    }
+                                    @Override
+                                    public void onDismissed(Snackbar snackbar, int event) {
+                                        // Event handler for when the given Snackbar has been dismissed
+                                    }
+                                })
+                                .build();
+
+            }
+            @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                token.continuePermissionRequest();
+            }
+        }).check();
 
     }
 

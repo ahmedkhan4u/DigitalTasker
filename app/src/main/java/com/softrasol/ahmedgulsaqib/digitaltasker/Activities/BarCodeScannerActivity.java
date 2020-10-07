@@ -73,7 +73,7 @@ public class BarCodeScannerActivity extends AppCompatActivity {
                     sellerReview();
                     buyerReview();
 
-                    finish();
+                    BarCodeScannerActivity.this.finish();
 
                 }
             }

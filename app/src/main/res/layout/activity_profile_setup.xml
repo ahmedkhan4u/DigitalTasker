@@ -219,7 +219,7 @@
                     android:maxLength="5"
                     android:scrollHorizontally="true"
                     android:ellipsize="end"
-                    android:inputType="number"
+                    android:inputType="phone"
                     android:drawableStart="@drawable/ic_price"
                     android:drawablePadding="10dp"
                     android:id="@+id/edt_price_profile_setup"

@@ -33,6 +33,7 @@
         <activity android:name=".Activities.PrivacyPolicyActivity" />
         <activity android:name=".Activities.AboutUsActivity" />
         <activity android:name=".Activities.TransactionsActivity" />
+        <activity android:name=".Activities.SearchUserActivity"/>
         <activity android:name=".Activities.ReviewsActivity" />
         <activity android:name=".Activities.BarCodeScannerActivity" />
         <activity android:name=".Activities.OrderDetailsActivity" />

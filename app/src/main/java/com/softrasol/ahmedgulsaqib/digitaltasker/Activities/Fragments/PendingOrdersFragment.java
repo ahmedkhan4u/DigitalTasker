@@ -69,11 +69,17 @@ public class PendingOrdersFragment extends Fragment {
 
                         OrderModel model = snapshot.toObject(OrderModel.class);
                         if (model.getReciever_id().equalsIgnoreCase(DatabaseHelper.Uid)
-                                || model.getSender_id().equalsIgnoreCase(DatabaseHelper.Uid)
                                 && model.getIs_accepted().equalsIgnoreCase("true")
                                 && model.getStatus().equalsIgnoreCase("Pending")
                         )
                         {
+                            list.add(model);
+                        }
+
+                        if (model.getSender_id().equalsIgnoreCase(DatabaseHelper.Uid)
+                                && model.getIs_accepted().equalsIgnoreCase("true")
+                                && model.getStatus().equalsIgnoreCase("Pending")
+                        ){
                             list.add(model);
                         }
 

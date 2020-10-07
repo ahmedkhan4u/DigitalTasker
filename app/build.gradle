@@ -75,4 +75,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.budiyev.android:code-scanner:2.1.0'
 
+    //Permission Library Dexter
+    implementation 'com.karumi:dexter:6.2.1'
+
 }
